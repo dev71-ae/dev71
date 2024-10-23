@@ -1,0 +1,11 @@
+.direnv/
+
+# Nix
+result 
+
+# Zig
+zig-out/
+.zig-cache/
+
+
+
