@@ -1,5 +1,5 @@
-#ifndef DEV71_CORE_H_
-#define DEV71_CORE_H_
+#ifndef DEV71_H
+#define DEV71_H
 
 #ifdef __cplusplus
 extern "C" {
