@@ -11,6 +11,7 @@ simulator-target := if arch == "aarch64" { "aarch64-apple-ios-sim" } else { "x86
 default: 
     @just --list --unsorted
 
+[macos]
 [group("darwin")]
 [doc("Generates xcframework for all architectures (except x86_64-apple-ios)")]
 [confirm("This will overwrite darwin/xcframeworks/Core71.xcframework, are you sure? (y[es]/n[o]):")]
@@ -23,8 +24,9 @@ xcframework: release-ios
                -headers {{ include }} \
                -output {{ darwin / "xcframeworks/Core71.xcframework" }}
 
+[linux]
 [group("lib")]
-[doc("Generates static libraries for all architectures")]
+[doc("Generates static libraries for iOS architectures")]
 release-ios: 
     cargo build --release \
                 --target aarch64-apple-ios \
