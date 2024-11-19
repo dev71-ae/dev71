@@ -1,21 +1,6 @@
 import Foundation
 import ProjectDescription
 
-func resolveCore71XCFramework() -> Path {
-    let frameworkName = "Core71.xcframework"
-    let frameworkPath = "xcframeworks/\(frameworkName)"
-
-    var isDirectory: ObjCBool = true
-    if !FileManager.default.fileExists(atPath: frameworkPath, isDirectory: &isDirectory) {
-        print("""
-        \nPlease build \(frameworkName) first by running `just xcframework`.
-        Those using nix with direnv, cd back to the main project directory and run the command.
-        """)
-    }
-
-    return .path(frameworkPath)
-}
-
 let project = Project(
     name: "Dev71",
     targets: [
@@ -50,3 +35,19 @@ let project = Project(
         ),
     ]
 )
+
+func resolveCore71XCFramework() -> Path {
+    let frameworkName = "Core71.xcframework"
+    let frameworkPath = "xcframeworks/\(frameworkName)"
+
+    var isDirectory: ObjCBool = true
+    if !FileManager.default.fileExists(atPath: frameworkPath, isDirectory: &isDirectory) {
+        print(
+            """
+            \nPlease build \(frameworkName) first by running `just xcframework`.
+            Those using nix with direnv, cd back to the main project directory and run the command.
+            """)
+    }
+
+    return .path(frameworkPath)
+}
