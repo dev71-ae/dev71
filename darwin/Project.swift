@@ -1,7 +1,5 @@
 import ProjectDescription
 
-let buildArch = "{}"
-
 let project = Project(
     name: "Dev71",
     targets: [
