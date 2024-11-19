@@ -1,0 +1,4 @@
+module Core71 {
+    umbrella header "dev71.h"
+    export *
+}

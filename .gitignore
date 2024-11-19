@@ -1,5 +1,8 @@
 .direnv/
 
+# ccls
+.ccls-cache/
+
 # Nix
 result 
 

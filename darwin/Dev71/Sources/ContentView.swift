@@ -1,11 +1,13 @@
 import SwiftUI
+import Core71
 
 public struct ContentView: View {
     public init() {}
 
     public var body: some View {
-        Text("Hello, World!")
-            .padding()
+        Button("Hello, World!") {
+            print(Core71.add(1, 2))
+        }
     }
 }
 

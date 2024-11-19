@@ -1,5 +1,7 @@
 import ProjectDescription
 
+let buildArch = "{}"
+
 let project = Project(
     name: "Dev71",
     targets: [
@@ -18,7 +20,9 @@ let project = Project(
             ),
             sources: ["Dev71/Sources/**"],
             resources: ["Dev71/Resources/**"],
-            dependencies: []
+            dependencies: [
+                .xcframework(path: .path("xcframeworks/Core71.xcframework"), status: .required)
+            ]
         ),
         .target(
             name: "Dev71Tests",

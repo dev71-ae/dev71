@@ -21,6 +21,7 @@
         devShells.default = pkgs.mkShell {
           packages = builtins.attrValues {
             inherit toolchain;
+            inherit (pkgs) rust-cbindgen just;
             inherit (config.treefmt.build.programs) alejandra rustfmt;
           };
         };
