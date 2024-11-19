@@ -1,19 +1,35 @@
 root := justfile_directory()
 
+darwin := root / "darwin"
+target := root / "target"
+include := root / "include"
+
+arch := arch()
+simulator-target := if arch == "aarch64" { "aarch64-apple-ios-sim" } else { "x86_64-apple-ios" } 
+
 [private]
 default: 
     @just --list --unsorted
 
 [group("darwin")]
-[doc("Generates xcframework for all static libs")]
+[doc("Generates xcframework for all architectures (except x86_64-apple-ios)")]
+[confirm("This will overwrite darwin/xcframeworks/Core71.xcframework, are you sure? (y[es]/n[o]):")]
 xcframework: release-ios
-    xcodebuild -create-xcframework -library target/aarch64-apple-ios/release/libdev71.a -headers include -library target/aarch64-apple-ios-sim/release/libdev71.a -headers include -output {{root}}/darwin/xcframeworks/Core71.xcframework
+    rm -rf {{ darwin / "xcframeworks/Core71.xcframework" }}
+    xcodebuild -create-xcframework \
+               -library {{ target / "aarch64-apple-ios/release/libdev71.a" }} \
+               -headers {{ include }} \
+               -library {{ target / simulator-target / "release/libdev71.a" }} \
+               -headers {{ include }} \
+               -output {{ darwin / "xcframeworks/Core71.xcframework" }}
 
 [group("lib")]
-[doc("Generates static libraries for all static libs")]
-release-ios:
-    cargo build --release --target aarch64-apple-ios --target aarch64-apple-ios-sim --target x86_64-apple-ios
+[doc("Generates static libraries for all architectures")]
+release-ios: 
+    cargo build --release \
+                --target aarch64-apple-ios \
+                --target  {{ simulator-target }}
 
 [group("lib")]
 bindgen:
-    cbindgen --config {{ root }}/cbindgen.toml --crate dev71 --output include/dev71.h
+    cbindgen --config {{ root / "cbindgen.toml" }} --crate dev71 --output {{ include / "dev71.h" }}
