@@ -23,7 +23,6 @@
           packages =
             builtins.attrValues {
               inherit toolchain;
-              inherit (pkgs) rust-cbindgen just;
               inherit (config.treefmt.build.programs) alejandra rustfmt;
             }
             ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv];
