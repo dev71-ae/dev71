@@ -1,0 +1,2 @@
+--config
+rust.rustc_flags=["-Copt-level=3", "-Clto", "-Cembed-bitcode=yes", "-Ccodegen-units=1"]

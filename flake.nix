@@ -23,6 +23,7 @@
           packages =
             builtins.attrValues {
               inherit toolchain;
+              inherit (pkgs) buck2 dotslash;
               inherit (config.treefmt.build.programs) alejandra rustfmt;
             }
             ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv];

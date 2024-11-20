@@ -1,0 +1,3 @@
+load(":defs.bzl", "local_execution_platform")
+
+local_execution_platform
