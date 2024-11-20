@@ -8,6 +8,7 @@
     flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
       perSystem = {
+        lib,
         pkgs,
         config,
         inputs',
@@ -15,15 +16,17 @@
       }: let
         toolchain = (inputs'.fenix.packages).fromToolchainFile {
           file = ./rust-toolchain.toml;
-          sha256 = "yMuSb5eQPO/bHv+Bcf/US8LVMbf/G/0MSfiPwBhiPpk=";
+          sha256 = "uyMZQZIPRSJIdtVJ/ChX053sf+uAY2tvjYNUA3ar1o4=";
         };
       in {
         devShells.default = pkgs.mkShell {
-          packages = builtins.attrValues {
-            inherit toolchain;
-            inherit (pkgs) rust-cbindgen just;
-            inherit (config.treefmt.build.programs) alejandra rustfmt;
-          };
+          packages =
+            builtins.attrValues {
+              inherit toolchain;
+              inherit (pkgs) rust-cbindgen just;
+              inherit (config.treefmt.build.programs) alejandra rustfmt;
+            }
+            ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv];
         };
 
         treefmt.config = {
@@ -43,7 +46,7 @@
 
     treefmt.url = "github:numtide/treefmt-nix";
     fenix = {
-      url = "github:nix-community/fenix";
+      url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

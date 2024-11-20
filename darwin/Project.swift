@@ -44,7 +44,7 @@ func resolveCore71XCFramework() -> Path {
     if !FileManager.default.fileExists(atPath: frameworkPath, isDirectory: &isDirectory) {
         print(
             """
-            \nPlease build \(frameworkName) first by running `just xcframework`.
+            \n\u{001b}[33mPlease build \(frameworkName) first by running `just xcframework`.
             Those using nix with direnv, cd back to the main project directory and run the command.
             """)
     }
