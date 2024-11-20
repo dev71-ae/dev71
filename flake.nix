@@ -10,23 +10,30 @@
       perSystem = {
         lib,
         pkgs,
+        pkgs',
         config,
         inputs',
         ...
-      }: let
-        toolchain = (inputs'.fenix.packages).fromToolchainFile {
-          file = ./rust-toolchain.toml;
-          sha256 = "uyMZQZIPRSJIdtVJ/ChX053sf+uAY2tvjYNUA3ar1o4=";
-        };
-      in {
+      }: {
         devShells.default = pkgs.mkShell {
-          packages =
-            builtins.attrValues {
-              inherit toolchain;
-              inherit (pkgs) buck2 dotslash;
-              inherit (config.treefmt.build.programs) alejandra rustfmt;
-            }
-            ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv];
+          packages = builtins.attrValues {
+            inherit (pkgs) reindeer;
+            inherit (pkgs') buck2 rust-project;
+
+            inherit (config.treefmt.build.programs) alejandra rustfmt;
+
+            toolchain-dev = with inputs'.fenix.packages;
+              combine [
+                rust-analyzer
+                complete.rust-src
+
+                (fromToolchainFile {
+                  file = ./rust-toolchain.toml;
+                  sha256 = "yMuSb5eQPO/bHv+Bcf/US8LVMbf/G/0MSfiPwBhiPpk=";
+                })
+              ];
+          } ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv]
+            ++ lib.optionals (pkgs.stdenv.isLinux) [pkgs.mold-wrapped];
         };
 
         treefmt.config = {
@@ -37,7 +44,7 @@
           programs.rustfmt.enable = true;
         };
       }; # perSystem
-      imports = [inputs.treefmt.flakeModule];
+      imports = [./nix inputs.treefmt.flakeModule];
     };
 
   inputs = {
@@ -45,9 +52,15 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     treefmt.url = "github:numtide/treefmt-nix";
+
     fenix = {
-      url = "github:nix-community/fenix/monthly";
+      url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    buck2-src = {
+      url = "github:facebook/buck2";
+      flake = false;
     };
   };
 }

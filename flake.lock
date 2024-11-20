@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "buck2-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1732129840,
+        "narHash": "sha256-xN3icXBTiRMEcdViFV0FH+XIqpjrK229ucmtKcStUUU=",
+        "owner": "facebook",
+        "repo": "buck2",
+        "rev": "fcb56bf3aa292e390489502b2c714f705adda733",
+        "type": "github"
+      },
+      "original": {
+        "owner": "facebook",
+        "repo": "buck2",
+        "type": "github"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -8,16 +24,15 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1730442928,
-        "narHash": "sha256-U1DWb5c3EfkA7pqx5V1H4AWRA+EaE6UJ0lIRvK1RxgM=",
+        "lastModified": 1732170943,
+        "narHash": "sha256-3qmtB25X5nxaaDL2VNlWB6OAQGVGv7xRm9tFMgJ3Jlo=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "87b4d20f896c99018dde4702a9c6157b516f2a76",
+        "rev": "7db16a01bca24b46acc1677f2b86ae03b5f207f8",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "monthly",
         "repo": "fenix",
         "type": "github"
       }
@@ -86,6 +101,7 @@
     },
     "root": {
       "inputs": {
+        "buck2-src": "buck2-src",
         "fenix": "fenix",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs",
