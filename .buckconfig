@@ -2,6 +2,7 @@
   root = .
   mode = build/mode
   prelude = prelude
+  platforms = build/platforms
   toolchains = build/toolchains
   none = none
 

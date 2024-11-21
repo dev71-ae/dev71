@@ -10,6 +10,15 @@ system_cxx_toolchain(
 system_rust_toolchain(
     name = "rust",
     default_edition = "2021",
+    rustc_target_triple = select({
+        "config//os:ios": select({
+          "config//cpu:arm64": select({
+             "platforms//constraints/device_type:device": "aarch64-apple-ios",
+             "platforms//constraints/device_type:simulator": "aarch64-apple-ios-sim",
+          }),
+          "config//cpu:x86_64": "x86_64-apple-ios"
+        })
+    }),
     visibility = ["PUBLIC"]
 )
 

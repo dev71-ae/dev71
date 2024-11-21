@@ -1,0 +1,7 @@
+[language-server.rust-analyzer.config.workspace.discoverConfig]
+command = ["rust-project", "develop-json", "--sysroot-mode=rustc", "{arg}"]
+progressLabel = "rust-analyzer[buck2]"
+filesToWatch = ["BUCK", "PACKAGE"]
+
+[language-server.rust-analyzer.config.check]
+overrideCommand = ["rust-project", "check", "$saved_file"]

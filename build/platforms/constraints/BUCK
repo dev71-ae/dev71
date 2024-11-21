@@ -1,0 +1,14 @@
+constraint_setting(
+    name = "device_type",
+    visibility = ["PUBLIC"]
+)
+
+constraint_value(
+    name = "simulator",
+    constraint_setting = ":device_type",
+)
+
+constraint_value(
+    name = "device",
+    constraint_setting = ":device_type",
+)

@@ -1,0 +1,13 @@
+constraint_setting(
+    name = "mode"
+)
+
+constraint_value(
+    name = "debug",
+    constraint_setting = ":mode",
+)
+
+constraint_value(
+    name = "release",
+    constraint_setting = ":mode",
+)
