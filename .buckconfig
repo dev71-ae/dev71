@@ -1,7 +1,7 @@
 [cells]
   root = .
-  mode = build/mode
   prelude = prelude
+  mode = build/mode
   platforms = build/platforms
   toolchains = build/toolchains
   none = none

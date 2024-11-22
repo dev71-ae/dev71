@@ -1,0 +1,18 @@
+COMMIT = "b9b8f8878ac272935193c449066b88c0cb94ced2"
+
+http_archive(
+    name = "archive",
+    urls = ["https://github.com/mozilla/cbindgen/archive/{}.tar.gz".format(COMMIT)],
+    sha256 = "",
+    type = "tar.gz",
+    strip_prefix = 'cbindgen-{}'.format(GIT_COMMIT),
+    visibility = [":cbindgen"],
+)
+
+rust_binary(
+    name = "cbindgen",
+    srcs = [":archive[]"],
+    edition = "2021",
+    link_style = "static",
+    visibility = ["PUBLIC"],
+)

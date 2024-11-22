@@ -5,3 +5,17 @@ filesToWatch = ["BUCK", "PACKAGE"]
 
 [language-server.rust-analyzer.config.check]
 overrideCommand = ["rust-project", "check", "$saved_file"]
+
+[language-server.buck2-lsp]
+command = "buck2"
+args = ["lsp"]
+
+[[language]]
+name = "starlark"
+scope = "source.starlark"
+injection-regex = "(starlark|bzl|bazel)"
+file-types = ["bzl", "bazel", "star", "bxl", { glob = "BUCK" }, { glob = "BUCK.*" }, { glob = "PACKAGE" }]
+language-servers = ["buck2-lsp"]
+comment-token = "#"
+indent = { tab-width = 4, unit = "    " }
+grammar = "python"

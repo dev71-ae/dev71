@@ -1,0 +1,128 @@
+def cbindgen_impl(ctx: AnalysisContext) -> list[Provider]:
+    return []
+
+cbindgen = rule(
+    implementation = cbindgen_impl,
+    attrs = {
+        "with_modulemap": attrs.bool(default = False),
+    },
+)
+
+CBindgenConfig = record(
+    language = field(enum("C", "C++", "Cython"), "C++"),
+    header = field(str | None, None),
+    trailer = field(str | None, None),
+    include_guard = field(str | None, None),
+    pragma_once = field(bool, False),
+    autogen_warning = field(str | None, None),
+    include_version = field(bool, False),
+    namespace = field(str | None, None),
+    namespaces = field(list[str], []),
+    using_namespaces = field(list[str], []),
+    sys_includes = field(list[str], []),
+    includes = field(list[str], []),
+    no_includes = field(bool, False),
+    cpp_compat = field(bool, False),
+    after_includes = field(str | None, None),
+    braces = field(enum("SameLine", "NextLine"), "SameLine"),
+    line_length = field(int, 100),
+    tab_width = field(int, 2),
+    documentation = field(bool, False),
+    documentation_style = field(enum("c", "c99", "c++", "doxy", "auto"), "auto"),
+    documentation_length = field(enum("short", "full"), "full"),
+    fn = record(
+        prefix = field(str | None, None),
+        postfix = field(str | None, None),
+        args = field(enum("horizontal", "vertical", "auto"), "auto"),
+        must_use = field(str | None, None),
+        deprecated = field(str | None, None),
+        deprecated_with_notes = field(str | None, None),
+        no_return = field(str | None, None),
+        swift_name_macro = field(str, ""),
+        rename_args = field(enum("None", "CamelCase", "PascalCase", "GeckoCase", "ScreamingSnakeCase",
+                               "SnakeCase", "LowerCase", "UpperCase", "QualifiedScreamingSnakeCase"), "None"),
+        sort_by = field(enum("Name", "None"), "None")
+    ),
+    struct = record(
+        rename_fields = field(enum("None", "CamelCase", "PascalCase", "GeckoCase", "ScreamingSnakeCase",
+                                 "SnakeCase", "LowerCase", "UpperCase", "QualifiedScreamingSnakeCase"), "None"),
+        must_use = field(str | None, None),
+        deprecated = field(str | None, None),
+        deprecated_with_notes = field(str | None, None),
+        derive_constructor = field(bool, False),
+        derive_eq = field(bool, False),
+        derive_neq = field(bool, False),
+        derive_lt = field(bool, False),
+        derive_lte = field(bool, False),
+        derive_gt = field(bool, False),
+        derive_gte = field(bool, False)
+    ),
+    enum = record(
+        rename_variants = field(enum("None", "CamelCase", "SnakeCase", "ScreamingSnakeCase",
+                                   "QualifiedScreamingSnakeCase", "LowerCase", "UpperCase", "PascalCase", "GeckoCase"), "None"),
+        add_sentinel = field(bool, False),
+        prefix_with_name = field(bool, False),
+        enum_class = field(bool, True),
+        derive_helper_methods = field(bool, False),
+        derive_const_casts = field(bool, False),
+        derive_mut_casts = field(bool, False),
+        cast_assert_name = field(str, "assert"),
+        must_use = field(str | None, None),
+        deprecated = field(str | None, None),
+        deprecated_with_notes = field(str | None, None),
+        deprecated_variant = field(str | None, None),
+        deprecated_variant_with_notes = field(str | None, None),
+        derive_tagged_enum_destructor = field(bool, False),
+        derive_tagged_enum_copy_constructor = field(bool, False),
+        derive_tagged_enum_copy_assignment = field(bool, False),
+        private_default_tagged_enum_constructor = field(bool, False)
+    ),
+    const = record(
+        allow_static_const = field(bool, True),
+        allow_constexpr = field(bool, False),
+        sort_by = field(enum("Name", "None"), "None")
+    ),
+    parse = record(
+        parse_deps = field(bool, False),
+        include = field(list[str], []),
+        exclude = field(list[str], []),
+        clean = field(bool, False),
+        extra_bindings = field(list[str], []),
+        expand = record(
+            crates = field(list[str], []),
+            all_features = field(bool, False),
+            default_features = field(bool, True),
+            features = field(list[str], [])
+        )
+    ),
+    export = record(
+        include = field(list[str], []),
+        exclude = field(list[str], []),
+        prefix = field(str | None, None),
+        item_types = field(list[str], []),
+        renaming_overrides_prefixing = field(bool, False),
+        rename = field(dict[str, str], {}),
+        pre_body = field(dict[str, str], {}),
+        body = field(dict[str, str], {}),
+        mangle = record(
+            rename_types = field(str | None, None),
+            remove_underscores = field(bool, False)
+        )
+    ),
+    layout = record(
+        packed = field(str | None, None),
+        aligned_n = field(str | None, None)
+    ),
+    ptr = record(
+        non_null_attribute = field(str | None, None)
+    ),
+    cython = record(
+        header = field(str, "*"),
+        cimports = record(
+            module = field(list[str], [])
+        )
+    ),
+    macro_expansion = record(
+        bitflags = field(bool, False)
+    )
+)

@@ -1,0 +1,14 @@
+rust_library(
+    name = "core71",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    link_style = "static",
+    visibility = ["PUBLIC"]
+)
+
+cbindgen(
+    name = "core71-headers",
+    srcs = ["lib.rs"],
+    with_modulemap = True,
+    visibility = ["PUBLIC"],
+)

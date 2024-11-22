@@ -1,7 +1,4 @@
 {
-  # This flake offers no environment whatsoever for the iOS App
-  # In fact, people working on the iOS app should refrain from loading the environment.
-  # to avoid nix overriding the SDKs & Swift breaking things.
   description = "dev71-ae/dev71: Rust-only flake for building the core of Dev71 clients";
 
   outputs = inputs @ {flake-parts, ...}:
@@ -18,7 +15,7 @@
         devShells.default = pkgs.mkShell {
           packages =
             builtins.attrValues {
-              inherit (pkgs) reindeer rust-cbindgen;
+              inherit (pkgs) reindeer rust-cbindgen swift;
               inherit (pkgs') buck2 rust-project;
 
               inherit (config.treefmt.build.programs) alejandra rustfmt;
@@ -44,6 +41,9 @@
 
           programs.alejandra.enable = true;
           programs.rustfmt.enable = true;
+          programs.buildifier.enable = true;
+
+          settings.formatter.buildifier.includes = ["BUCK" "PACKAGE"];
         };
       }; # perSystem
       imports = [./nix inputs.treefmt.flakeModule];
@@ -56,7 +56,7 @@
     treefmt.url = "github:numtide/treefmt-nix";
 
     fenix = {
-      url = "github:nix-community/fenix";
+      url = "github:nix-community/fenix/monthly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
