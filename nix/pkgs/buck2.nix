@@ -12,11 +12,11 @@
   openssl,
   sqlite,
   protobuf,
+  installShellFiles,
 }:
 rustPlatform.buildRustPackage {
   pname = "buck2";
   version = builtins.toString buck2-src.lastModified;
-
   src = buck2-src;
 
   inherit cargoLock;
@@ -26,17 +26,11 @@ rustPlatform.buildRustPackage {
   '';
 
   nativeBuildInputs =
-    builtins.attrValues {
-      inherit protobuf;
-      inherit pkg-config;
-      inherit (llvmPackages) lld clang;
-    }
+    [protobuf pkg-config installShellFiles llvmPackages.lld llvmPackages.clang]
     ++ lib.optionals stdenv.isLinux [mold-wrapped];
 
   buildInputs =
-    builtins.attrValues {
-      inherit openssl sqlite;
-    }
+    [openssl sqlite]
     ++ lib.optionals stdenv.isDarwin (builtins.attrValues {
       inherit libiconv;
       inherit (darwin.apple_sdk.frameworks) CoreFoundation CoreServices IOKit Security;
@@ -57,4 +51,11 @@ rustPlatform.buildRustPackage {
     else if stdenv.isDarwin
     then "-C linker=-fuse-ld=ld -ld_new"
     else "";
+
+  postInstall = ''
+    installShellCompletion --cmd buck2 \
+      --bash <( $out/bin/buck2 completion bash ) \
+      --fish <( $out/bin/buck2 completion fish ) \
+      --zsh <( $out/bin/buck2 completion zsh )
+  '';
 }
