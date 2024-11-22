@@ -16,23 +16,25 @@
         ...
       }: {
         devShells.default = pkgs.mkShell {
-          packages = builtins.attrValues {
-            inherit (pkgs) reindeer;
-            inherit (pkgs') buck2 rust-project;
+          packages =
+            builtins.attrValues {
+              inherit (pkgs) reindeer rust-cbindgen;
+              inherit (pkgs') buck2 rust-project;
 
-            inherit (config.treefmt.build.programs) alejandra rustfmt;
+              inherit (config.treefmt.build.programs) alejandra rustfmt;
 
-            toolchain-dev = with inputs'.fenix.packages;
-              combine [
-                rust-analyzer
-                complete.rust-src
+              toolchain-dev = with inputs'.fenix.packages;
+                combine [
+                  rust-analyzer
+                  complete.rust-src
 
-                (fromToolchainFile {
-                  file = ./rust-toolchain.toml;
-                  sha256 = "yMuSb5eQPO/bHv+Bcf/US8LVMbf/G/0MSfiPwBhiPpk=";
-                })
-              ];
-          } ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv]
+                  (fromToolchainFile {
+                    file = ./rust-toolchain.toml;
+                    sha256 = "yMuSb5eQPO/bHv+Bcf/US8LVMbf/G/0MSfiPwBhiPpk=";
+                  })
+                ];
+            }
+            ++ lib.optionals (pkgs.stdenv.isDarwin) [pkgs.libiconv]
             ++ lib.optionals (pkgs.stdenv.isLinux) [pkgs.mold-wrapped];
         };
 
