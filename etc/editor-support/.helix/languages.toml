@@ -12,10 +12,10 @@ args = ["lsp"]
 
 [[language]]
 name = "starlark"
-scope = "source.starlark"
-injection-regex = "(starlark|bzl|bazel)"
-file-types = ["bzl", "bazel", "star", "bxl", { glob = "BUCK" }, { glob = "BUCK.*" }, { glob = "PACKAGE" }]
+file-types = ["bzl", "star", "bxl", { glob = "BUCK" }, { glob = "BUCK.*" }, { glob = "PACKAGE" }]
 language-servers = ["buck2-lsp"]
-comment-token = "#"
-indent = { tab-width = 4, unit = "    " }
-grammar = "python"
+
+[[language]]
+name = "ini"
+file-types = ["ini", { glob = ".buckconfig" }]
+

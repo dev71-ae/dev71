@@ -1,6 +1,7 @@
 [cells]
   root = .
   prelude = prelude
+  prelude-71 = build/prelude-71
   mode = build/mode
   platforms = build/platforms
   toolchains = build/toolchains
@@ -15,10 +16,12 @@
   fbcode_macros = none
   buck = none
 
-# Uses a copy of the prelude bundled with the buck2 binary. You can alternatively delete this
-# section and vendor a copy of the prelude to the `prelude` directory of your project.
 [external_cells]
-  prelude = bundled
+  prelude = git
+
+[external_cell_prelude]
+  git_origin = https://github.com/dev71-ae/buck2-prelude
+  commit_hash = 080a7cced440499c4537b550d39ae46a4e8ea0a9
 
 [parser]
   target_platform_detector_spec = target:root//...->prelude//platforms:default
