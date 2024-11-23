@@ -1,0 +1,36 @@
+[workspace]
+
+[package]
+name = "cbindgen-third-party"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+# Dummy target to keep Cargo happy
+[[bin]]
+name = "top"
+path = "top.rs"
+
+[dependencies]
+clap = { version = "4.3" }
+indexmap = "2.1.0"
+log = "0.4"
+serde = { version = "1.0.103", default-features = false, features = ["derive"] }
+serde_json = "1.0"
+tempfile = "3"
+toml = "0.8.8"
+proc-macro2 = "1.0.60"
+quote = "1"
+heck = "0.4"
+
+[dependencies.syn]
+version = "2.0.85"
+default-features = false
+features = [
+    "clone-impls",
+    "extra-traits",
+    "fold",
+    "full",
+    "parsing",
+    "printing",
+]

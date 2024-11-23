@@ -4,6 +4,7 @@
   mode = build/mode
   platforms = build/platforms
   toolchains = build/toolchains
+  third-party = build/third-party
   none = none
 
 [cell_aliases]

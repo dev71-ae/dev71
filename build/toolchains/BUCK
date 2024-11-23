@@ -1,7 +1,6 @@
 load("@prelude//toolchains:cxx.bzl", "system_cxx_toolchain")
 load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
 load("@prelude//toolchains:python.bzl", "system_python_bootstrap_toolchain")
-load("@prelude//toolchains:genrule.bzl", "system_genrule_toolchain")
 
 system_cxx_toolchain(
     name = "cxx",
@@ -11,24 +10,19 @@ system_cxx_toolchain(
 system_rust_toolchain(
     name = "rust",
     default_edition = "2021",
-    rustc_target_triple = select({
-        "config//os:ios": select({
-          "config//cpu:arm64": select({
-             "platforms//constraints:device": "aarch64-apple-ios",
-             "platforms//constraints:simulator": "aarch64-apple-ios-sim",
-          }),
-          "config//cpu:x86_64": "x86_64-apple-ios"
-        })
-    }),
+    # rustc_target_triple = select({
+    #     "config//os:ios": select({
+    #       "config//cpu:arm64": select({
+    #          "platforms//constraints:device": "aarch64-apple-ios",
+    #          "platforms//constraints:simulator": "aarch64-apple-ios-sim",
+    #       }),
+    #       "config//cpu:x86_64": "x86_64-apple-ios"
+    #     })
+    # }),
     visibility = ["PUBLIC"]
 )
 
 system_python_bootstrap_toolchain(
     name = "python_bootstrap",
-    visibility = ["PUBLIC"]
-)
-
-system_genrule_toolchain(
-    name = "genrule",
     visibility = ["PUBLIC"]
 )

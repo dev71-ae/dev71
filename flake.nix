@@ -21,12 +21,19 @@
         }:
         {
           devShells.default = pkgs.mkShell {
+            buildinputs = lib.optionals (pkgs.stdenv.isDarwin) [ pkgs.libiconv ];
             packages =
               builtins.attrValues {
-                inherit (pkgs) reindeer rust-cbindgen swift;
+                inherit (pkgs) reindeer;
                 inherit (pkgs') buck2 rust-project;
 
-                inherit (config.treefmt.build.programs) nixfmt-rfc-style rustfmt buildifier;
+                inherit (pkgs.llvmPackages_latest) clang lld;
+
+                inherit (config.treefmt.build.programs)
+                  nixfmt-rfc-style
+                  rustfmt
+                  buildifier
+                  ;
 
                 toolchain-dev =
                   with inputs'.fenix.packages;
@@ -40,7 +47,6 @@
                     })
                   ];
               }
-              ++ lib.optionals (pkgs.stdenv.isDarwin) [ pkgs.libiconv ]
               ++ lib.optionals (pkgs.stdenv.isLinux) [ pkgs.mold-wrapped ];
           };
 
