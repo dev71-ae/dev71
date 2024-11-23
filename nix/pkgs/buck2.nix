@@ -25,16 +25,30 @@ rustPlatform.buildRustPackage {
     ln -s ${./support/Buck2.lock} Cargo.lock
   '';
 
-  nativeBuildInputs =
-    [protobuf pkg-config installShellFiles llvmPackages.lld llvmPackages.clang]
-    ++ lib.optionals stdenv.isLinux [mold-wrapped];
+  nativeBuildInputs = [
+    protobuf
+    pkg-config
+    installShellFiles
+    llvmPackages.lld
+    llvmPackages.clang
+  ] ++ lib.optionals stdenv.isLinux [ mold-wrapped ];
 
   buildInputs =
-    [openssl sqlite]
-    ++ lib.optionals stdenv.isDarwin (builtins.attrValues {
-      inherit libiconv;
-      inherit (darwin.apple_sdk.frameworks) CoreFoundation CoreServices IOKit Security;
-    });
+    [
+      openssl
+      sqlite
+    ]
+    ++ lib.optionals stdenv.isDarwin (
+      builtins.attrValues {
+        inherit libiconv;
+        inherit (darwin.apple_sdk.frameworks)
+          CoreFoundation
+          CoreServices
+          IOKit
+          Security
+          ;
+      }
+    );
 
   strictDeps = true;
 
@@ -46,11 +60,12 @@ rustPlatform.buildRustPackage {
   BUCK2_BUILD_PROTOC_INCLUDE = "${protobuf}/include";
 
   CARGO_BUILD_RUSTFLAGS =
-    if stdenv.isLinux
-    then "-C linker=clang -C link-arg=-fuse-ld=mold -Wl,--compress-debug-sections=zstd"
-    else if stdenv.isDarwin
-    then "-C linker=-fuse-ld=ld -ld_new"
-    else "";
+    if stdenv.isLinux then
+      "-C linker=clang -C link-arg=-fuse-ld=mold -Wl,--compress-debug-sections=zstd"
+    else if stdenv.isDarwin then
+      "-C linker=-fuse-ld=ld -ld_new"
+    else
+      "";
 
   postInstall = ''
     installShellCompletion --cmd buck2 \

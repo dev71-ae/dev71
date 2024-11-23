@@ -4,8 +4,10 @@
   buck2-src,
   fromToolchainFile,
   makeRustPlatform,
-}: let
-  callBuckPackage = lib.callPackageWith (pkgs
+}:
+let
+  callBuckPackage = lib.callPackageWith (
+    pkgs
     // {
       inherit buck2-src;
 
@@ -17,18 +19,21 @@
         };
       };
 
-      rustPlatform = let
-        toolchain = fromToolchainFile {
-          file = "${buck2-src}/rust-toolchain";
-          sha256 = "oW7iyYzGcgW5TjRA2HLhYVW2WNTNadIe4SX7IWsrs3g=";
-        };
-      in
+      rustPlatform =
+        let
+          toolchain = fromToolchainFile {
+            file = "${buck2-src}/rust-toolchain";
+            sha256 = "oW7iyYzGcgW5TjRA2HLhYVW2WNTNadIe4SX7IWsrs3g=";
+          };
+        in
         makeRustPlatform {
           rustc = toolchain;
           cargo = toolchain;
         };
-    });
-in {
-  buck2 = callBuckPackage ./buck2.nix {};
-  rust-project = callBuckPackage ./rust-project.nix {};
+    }
+  );
+in
+{
+  buck2 = callBuckPackage ./buck2.nix { };
+  rust-project = callBuckPackage ./rust-project.nix { };
 }

@@ -39,13 +39,31 @@ CBindgenConfig = record(
         deprecated_with_notes = field(str | None, None),
         no_return = field(str | None, None),
         swift_name_macro = field(str, ""),
-        rename_args = field(enum("None", "CamelCase", "PascalCase", "GeckoCase", "ScreamingSnakeCase",
-                               "SnakeCase", "LowerCase", "UpperCase", "QualifiedScreamingSnakeCase"), "None"),
-        sort_by = field(enum("Name", "None"), "None")
+        rename_args = field(enum(
+            "None",
+            "CamelCase",
+            "PascalCase",
+            "GeckoCase",
+            "ScreamingSnakeCase",
+            "SnakeCase",
+            "LowerCase",
+            "UpperCase",
+            "QualifiedScreamingSnakeCase",
+        ), "None"),
+        sort_by = field(enum("Name", "None"), "None"),
     ),
     struct = record(
-        rename_fields = field(enum("None", "CamelCase", "PascalCase", "GeckoCase", "ScreamingSnakeCase",
-                                 "SnakeCase", "LowerCase", "UpperCase", "QualifiedScreamingSnakeCase"), "None"),
+        rename_fields = field(enum(
+            "None",
+            "CamelCase",
+            "PascalCase",
+            "GeckoCase",
+            "ScreamingSnakeCase",
+            "SnakeCase",
+            "LowerCase",
+            "UpperCase",
+            "QualifiedScreamingSnakeCase",
+        ), "None"),
         must_use = field(str | None, None),
         deprecated = field(str | None, None),
         deprecated_with_notes = field(str | None, None),
@@ -55,11 +73,20 @@ CBindgenConfig = record(
         derive_lt = field(bool, False),
         derive_lte = field(bool, False),
         derive_gt = field(bool, False),
-        derive_gte = field(bool, False)
+        derive_gte = field(bool, False),
     ),
     enum = record(
-        rename_variants = field(enum("None", "CamelCase", "SnakeCase", "ScreamingSnakeCase",
-                                   "QualifiedScreamingSnakeCase", "LowerCase", "UpperCase", "PascalCase", "GeckoCase"), "None"),
+        rename_variants = field(enum(
+            "None",
+            "CamelCase",
+            "SnakeCase",
+            "ScreamingSnakeCase",
+            "QualifiedScreamingSnakeCase",
+            "LowerCase",
+            "UpperCase",
+            "PascalCase",
+            "GeckoCase",
+        ), "None"),
         add_sentinel = field(bool, False),
         prefix_with_name = field(bool, False),
         enum_class = field(bool, True),
@@ -75,12 +102,12 @@ CBindgenConfig = record(
         derive_tagged_enum_destructor = field(bool, False),
         derive_tagged_enum_copy_constructor = field(bool, False),
         derive_tagged_enum_copy_assignment = field(bool, False),
-        private_default_tagged_enum_constructor = field(bool, False)
+        private_default_tagged_enum_constructor = field(bool, False),
     ),
     const = record(
         allow_static_const = field(bool, True),
         allow_constexpr = field(bool, False),
-        sort_by = field(enum("Name", "None"), "None")
+        sort_by = field(enum("Name", "None"), "None"),
     ),
     parse = record(
         parse_deps = field(bool, False),
@@ -92,8 +119,8 @@ CBindgenConfig = record(
             crates = field(list[str], []),
             all_features = field(bool, False),
             default_features = field(bool, True),
-            features = field(list[str], [])
-        )
+            features = field(list[str], []),
+        ),
     ),
     export = record(
         include = field(list[str], []),
@@ -106,23 +133,23 @@ CBindgenConfig = record(
         body = field(dict[str, str], {}),
         mangle = record(
             rename_types = field(str | None, None),
-            remove_underscores = field(bool, False)
-        )
+            remove_underscores = field(bool, False),
+        ),
     ),
     layout = record(
         packed = field(str | None, None),
-        aligned_n = field(str | None, None)
+        aligned_n = field(str | None, None),
     ),
     ptr = record(
-        non_null_attribute = field(str | None, None)
+        non_null_attribute = field(str | None, None),
     ),
     cython = record(
         header = field(str, "*"),
         cimports = record(
-            module = field(list[str], [])
-        )
+            module = field(list[str], []),
+        ),
     ),
     macro_expansion = record(
-        bitflags = field(bool, False)
-    )
+        bitflags = field(bool, False),
+    ),
 )
