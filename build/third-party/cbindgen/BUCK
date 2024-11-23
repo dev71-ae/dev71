@@ -83,7 +83,8 @@ rust_binary(
         "//cbindgen/rust:heck",
         "//cbindgen/rust:syn"
     ],
-    default_target_platform = "prelude//platforms:default"
+    default_target_platform = "prelude//platforms:default",
+    visibility = ["PUBLIC"]
 )
 
 # To enforce it's built and ran on the native platform
