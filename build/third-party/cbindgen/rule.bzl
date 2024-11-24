@@ -2,9 +2,9 @@ def cbindgen_impl(ctx: AnalysisContext) -> list[Provider]:
     header = ctx.actions.declare_output(ctx.attrs.header_name + ".h")
 
     ctx.actions.run([
-        ctx.attrs._cbindgen[RunInfo],
+        ctx.attrs._cbindgen_cli[RunInfo],
         "--config",
-        ctx.attrs.config_file,
+        ctx.attrs.cbindgen_toml,
         "--output",
         header.as_output(),
         ctx.attrs.src,
@@ -18,8 +18,8 @@ cbindgen = rule(
     impl = cbindgen_impl,
     attrs = {
         "src": attrs.source(),
-        "config_file": attrs.source(),
+        "cbindgen_toml": attrs.source(),
         "header_name": attrs.string(),
-        "_cbindgen": attrs.dep(providers = [RunInfo], default = "third_party//cbindgen:bin-native"),
+        "_cbindgen_cli": attrs.dep(providers = [RunInfo], default = "third_party//cbindgen:bin-native"),
     },
 )

@@ -21,13 +21,28 @@
         }:
         {
           devShells.default = pkgs.mkShell {
+            buildInputs = lib.optionals (pkgs.stdenv.isDarwin) [ pkgs.apple-sdk_15 ];
             packages =
               builtins.attrValues {
                 inherit (pkgs) reindeer;
                 inherit (pkgs') buck2 rust-project;
-                inherit (pkgs.llvmPackages_latest) clang;
 
                 inherit (config.treefmt.build.programs) nixfmt rustfmt buildifier;
+
+                cc =
+                  let
+                    llvm = pkgs.llvmPackages_latest;
+                  in
+                  if pkgs.stdenv.isDarwin then
+                    pkgs.wrapCCWith {
+                      cc = pkgs.stdenv.cc;
+                      bintools = pkgs.stdenv.cc.bintools;
+                      extraBuildCommands = ''
+                        echo "-L${pkgs.libiconv}/lib" >> $out/nix-support/cc-cflags
+                      '';
+                    }
+                  else
+                    llvm.clang;
 
                 toolchain-dev =
                   with inputs'.fenix.packages;

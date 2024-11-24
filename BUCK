@@ -2,7 +2,7 @@ load("@third_party//cbindgen:rule.bzl", "cbindgen")
 
 rust_library(
     name = "core71",
-    srcs = ["lib.rs"],
+    srcs = ["src/lib.rs"],
     edition = "2021",
     link_style = "static",
     visibility = ["PUBLIC"],
@@ -10,8 +10,8 @@ rust_library(
 
 cbindgen(
     name = "core71.h",
-    src = "lib.rs",
-    config_file = "cbindgen.toml",
+    src = "src/lib.rs",
+    cbindgen_toml = "cbindgen.toml",
     header_name = "core71",
     visibility = ["PUBLIC"],
 )
