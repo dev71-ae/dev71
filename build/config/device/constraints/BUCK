@@ -1,0 +1,16 @@
+constraint_setting(
+    name = "device",
+    visibility = ["PUBLIC"],
+)
+
+constraint_value(
+    name = "physical",
+    constraint_setting = ":device",
+    visibility = ["PUBLIC"],
+)
+
+constraint_value(
+    name = "simulator",
+    constraint_setting = ":device",
+    visibility = ["PUBLIC"],
+)

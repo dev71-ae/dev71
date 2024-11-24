@@ -1,11 +1,11 @@
 [cells]
   root = .
   prelude = prelude
-  prelude-71 = build/prelude-71
+  d71_config = build/config
   mode = build/mode
   platforms = build/platforms
   toolchains = build/toolchains
-  third-party = build/third-party
+  third_party = build/third-party
   none = none
 
 [cell_aliases]

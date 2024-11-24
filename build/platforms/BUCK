@@ -1,11 +1,9 @@
 platform(
     name = "ios-arm64",
-    constraint_values = ["prelude//os/constraints:ios", "prelude//cpu/constraints:arm64"],
-    visibility = ["PUBLIC"],
+    constraint_values = ["prelude//os/constraints:ios", "prelude//cpu/constraints:arm64", "d71_config//constraints:physical"],
 )
 
 platform(
     name = "ios-arm64-sim",
-    constraint_values = ["prelude//os/constraints:ios", "prelude//cpu/constraints:arm64", "//constraints:simulator"],
-    visibility = ["PUBLIC"],
+    constraint_values = ["prelude//os/constraints:ios", "prelude//cpu/constraints:arm64", "d71_config//constraints:simulator"],
 )

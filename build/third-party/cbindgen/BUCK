@@ -70,20 +70,21 @@ rust_binary(
     env = {
         "CARGO_PKG_VERSION": COMMIT,
     },
+    # NOTE(@huwaireb): In most cases I'd prefer to separate our dependencies from third-party library dependencies
+    # but in this case it's okay.
     deps = [
-        "//cbindgen/rust:clap",
-        "//cbindgen/rust:indexmap",
-        "//cbindgen/rust:log",
-        "//cbindgen/rust:serde",
-        "//cbindgen/rust:serde_json",
-        "//cbindgen/rust:tempfile",
-        "//cbindgen/rust:toml",
-        "//cbindgen/rust:proc-macro2",
-        "//cbindgen/rust:quote",
-        "//cbindgen/rust:heck",
-        "//cbindgen/rust:syn",
+        "//rust:clap",
+        "//rust:indexmap",
+        "//rust:log",
+        "//rust:serde",
+        "//rust:serde_json",
+        "//rust:tempfile",
+        "//rust:toml",
+        "//rust:proc-macro2",
+        "//rust:quote",
+        "//rust:heck",
+        "//rust:syn",
     ],
-    default_target_platform = "prelude//platforms:default",
     visibility = ["PUBLIC"],
 )
 

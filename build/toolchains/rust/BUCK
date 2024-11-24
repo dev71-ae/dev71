@@ -1,0 +1,39 @@
+load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
+
+RUST_TARGET_TRIPLE = select({
+    "config//os:linux": select({
+        "config//cpu:arm64": "aarch64-unknown-linux-gnu",
+        "config//cpu:x86_64": "x86_64-unknown-linux-gnu",
+    }),
+    "config//os:macos": select({
+        "config//cpu:arm64": "aarch64-apple-darwin",
+        "config//cpu:x86_64": "x86_64-apple-darwin",
+    }),
+    "config//os:windows": select({
+        "config//cpu:arm64": select({
+            "DEFAULT": "aarch64-pc-windows-msvc",
+            "config//abi:gnu": "aarch64-pc-windows-gnu",
+            "config//abi:msvc": "aarch64-pc-windows-msvc",
+        }),
+        "config//cpu:x86_64": select({
+            "DEFAULT": "x86_64-pc-windows-msvc",
+            "config//abi:gnu": "x86_64-pc-windows-gnu",
+            "config//abi:msvc": "x86_64-pc-windows-msvc",
+        }),
+    }),
+    "config//os:ios": select({
+        "config//cpu:arm64": select({
+            "DEFAULT": "aarch64-apple-ios",
+            "d71_config//device:physical": "aarch64-apple-ios",
+            "d71_config//device:simulator": "aarch64-apple-ios-sim",
+        }),
+        "config//cpu:x86_64": "x86_64-apple-ios",
+    }),
+})
+
+system_rust_toolchain(
+    name = "toolchain",
+    default_edition = "2021",
+    rustc_target_triple = RUST_TARGET_TRIPLE,
+    visibility = ["PUBLIC"],
+)

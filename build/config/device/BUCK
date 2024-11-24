@@ -1,0 +1,15 @@
+config_setting(
+    name = "physical",
+    constraint_values = [
+        "//device/constraints:physical",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+config_setting(
+    name = "simulator",
+    constraint_values = [
+        "//device/constraints:simulator",
+    ],
+    visibility = ["PUBLIC"],
+)

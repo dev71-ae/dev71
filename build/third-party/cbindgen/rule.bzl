@@ -20,6 +20,6 @@ cbindgen = rule(
         "src": attrs.source(),
         "config_file": attrs.source(),
         "header_name": attrs.string(),
-        "_cbindgen": attrs.dep(providers = [RunInfo], default = "third-party//cbindgen:bin-native"),
+        "_cbindgen": attrs.dep(providers = [RunInfo], default = "third_party//cbindgen:bin-native"),
     },
 )

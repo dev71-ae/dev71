@@ -1,0 +1,3 @@
+.buckconfig linguist-language=ini
+*.bxl linguist-language=starlark
+PACKAGE linguist-language=starlark

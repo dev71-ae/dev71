@@ -25,8 +25,8 @@
               builtins.attrValues {
                 inherit (pkgs) reindeer;
                 inherit (pkgs') buck2 rust-project;
-
                 inherit (pkgs.llvmPackages_latest) clang;
+
                 inherit (config.treefmt.build.programs) nixfmt rustfmt buildifier;
 
                 toolchain-dev =
@@ -52,6 +52,7 @@
             programs.rustfmt.enable = true;
             programs.buildifier.enable = true;
             programs.biome.enable = true;
+            programs.taplo.enable = true;
 
             settings.global.excludes = [
               ".buckroot"
@@ -59,7 +60,7 @@
               "*/.buckconfig"
               "build/mode/{debug,release}"
               "build/tools/bin/*"
-              "*.{md,toml,envrc,swift}"
+              "*.{md,envrc,swift}"
             ];
 
             settings.formatter.buildifier.includes = [
