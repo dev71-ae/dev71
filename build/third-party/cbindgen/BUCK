@@ -58,14 +58,14 @@ http_archive(
     urls = ["https://github.com/mozilla/cbindgen/archive/{}.tar.gz".format(COMMIT)],
     sha256 = "370d10d17ace66269716aca11a242e02f6394f3d96db39df3881207ddcc3d9c8",
     type = "tar.gz",
-    strip_prefix = f"cbindgen-{COMMIT}",
+    strip_prefix = "cbindgen-{}".format(COMMIT),
     sub_targets = SOURCES,
     visibility = [":cbindgen"],
 )
 
 rust_binary(
     name = "bin",
-    srcs = map(lambda f: f":archive[{f}]", SOURCES),
+    srcs = map(lambda file: ":archive[{}]".format(file), SOURCES),
     edition = "2021",
     env = {
         "CARGO_PKG_VERSION": COMMIT,
@@ -81,10 +81,10 @@ rust_binary(
         "//cbindgen/rust:proc-macro2",
         "//cbindgen/rust:quote",
         "//cbindgen/rust:heck",
-        "//cbindgen/rust:syn"
+        "//cbindgen/rust:syn",
     ],
     default_target_platform = "prelude//platforms:default",
-    visibility = ["PUBLIC"]
+    visibility = ["PUBLIC"],
 )
 
 # To enforce it's built and ran on the native platform
@@ -92,5 +92,5 @@ configured_alias(
     name = "bin-native",
     actual = ":bin",
     platform = "prelude//platforms:default",
-    visibility = ["PUBLIC"]
+    visibility = ["PUBLIC"],
 )

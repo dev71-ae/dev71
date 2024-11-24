@@ -1,14 +1,16 @@
 load("@prelude//toolchains:cxx.bzl", "system_cxx_toolchain")
-load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
 load("@prelude//toolchains:python.bzl", "system_python_bootstrap_toolchain")
+load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
 
 system_cxx_toolchain(
     name = "cxx",
-    visibility = ["PUBLIC"]
+    link_flags = ["-fuse-ld=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld", "-ld_new"],
+    visibility = ["PUBLIC"],
 )
 
 system_rust_toolchain(
     name = "rust",
+    rustc_flags = ["-C", "link-arg=-fuse-ld=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld", "-Clink-arg=-ld_new"],
     default_edition = "2021",
     # rustc_target_triple = select({
     #     "config//os:ios": select({
@@ -19,10 +21,10 @@ system_rust_toolchain(
     #       "config//cpu:x86_64": "x86_64-apple-ios"
     #     })
     # }),
-    visibility = ["PUBLIC"]
+    visibility = ["PUBLIC"],
 )
 
 system_python_bootstrap_toolchain(
     name = "python_bootstrap",
-    visibility = ["PUBLIC"]
+    visibility = ["PUBLIC"],
 )

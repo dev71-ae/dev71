@@ -1,31 +1,31 @@
 {
-  "file_types": {
-    "ini": [".buckconfig"]
-  },
-  "languages": {
-    "Starlark": {
-      "language_servers": ["!starpls", "buck2-lsp"]
-    }
-  },
-  "lsp": {
-    "rust-analyzer": {
-      "initialization_options": {
-        "workspace": {
-          "discoverConfig": {
-            "command": [
-              "rust-project",
-              "develop-json",
-              "--sysroot-mode=rustc",
-              "{arg}"
-            ],
-            "progressLabel": "rust-analyzer[buck2]",
-            "filesToWatch": ["BUCK", "PACKAGE"]
-          }
-        },
-        "check": {
-          "overrideCommand": ["rust-project", "check", "$saved_file"]
-        }
-      }
-    }
-  }
+	"file_types": {
+		"ini": [".buckconfig"]
+	},
+	"languages": {
+		"Starlark": {
+			"language_servers": ["!starpls", "buck2-lsp"]
+		}
+	},
+	"lsp": {
+		"rust-analyzer": {
+			"initialization_options": {
+				"workspace": {
+					"discoverConfig": {
+						"command": [
+							"rust-project",
+							"develop-json",
+							"--sysroot-mode=rustc",
+							"{arg}"
+						],
+						"progressLabel": "rust-analyzer[buck2]",
+						"filesToWatch": ["BUCK", "PACKAGE"]
+					}
+				},
+				"check": {
+					"overrideCommand": ["rust-project", "check", "$saved_file"]
+				}
+			}
+		}
+	}
 }
