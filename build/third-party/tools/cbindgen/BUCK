@@ -60,7 +60,7 @@ http_archive(
     type = "tar.gz",
     strip_prefix = "cbindgen-{}".format(COMMIT),
     sub_targets = SOURCES,
-    visibility = [":cbindgen"],
+    visibility = [":bin"],
 )
 
 rust_binary(
@@ -85,13 +85,5 @@ rust_binary(
         "//rust:heck",
         "//rust:syn",
     ],
-    visibility = ["PUBLIC"],
-)
-
-# To enforce it's built and ran on the native platform
-configured_alias(
-    name = "bin-native",
-    actual = ":bin",
-    platform = "prelude//platforms:default",
     visibility = ["PUBLIC"],
 )

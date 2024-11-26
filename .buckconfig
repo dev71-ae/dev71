@@ -24,3 +24,9 @@
 
 [build]
   execution_platforms = prelude//platforms:default
+
+[buck2]
+  digest_algorithms = BLAKE3
+  restarter = true
+  materializations = deferred
+  hash_all_commands = true

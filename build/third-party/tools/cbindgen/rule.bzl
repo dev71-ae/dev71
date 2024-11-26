@@ -20,6 +20,6 @@ cbindgen = rule(
         "src": attrs.source(),
         "cbindgen_toml": attrs.source(),
         "header_name": attrs.string(),
-        "_cbindgen_cli": attrs.dep(providers = [RunInfo], default = "third_party//cbindgen:bin-native"),
+        "_cbindgen_cli": attrs.exec_dep(providers = [RunInfo], default = "third_party//tools/cbindgen:bin"),
     },
 )

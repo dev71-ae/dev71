@@ -1,4 +1,4 @@
-load("@third_party//cbindgen:rule.bzl", "cbindgen")
+load("@third_party//tools/cbindgen:rule.bzl", "cbindgen")
 
 rust_library(
     name = "core71",
@@ -11,7 +11,7 @@ rust_library(
 cbindgen(
     name = "core71.h",
     src = "src/lib.rs",
-    cbindgen_toml = "cbindgen.toml",
+    cbindgen_toml = "d71_config//core71:cbindgen.toml",
     header_name = "core71",
     visibility = ["PUBLIC"],
 )
