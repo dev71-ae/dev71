@@ -1,8 +1,6 @@
 load("@prelude//toolchains:cxx.bzl", "system_cxx_toolchain")
 load("@prelude//toolchains:ocaml.bzl", "system_ocaml_toolchain")
 load("@prelude//toolchains:python.bzl", "system_python_bootstrap_toolchain")
-load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
-load("//tvix:tvix.bzl", "tvix")
 
 system_cxx_toolchain(name = "cxx")
 system_python_bootstrap_toolchain(name = "python_bootstrap")
@@ -11,20 +9,3 @@ toolchain_alias(
     name = "rust",
     actual = "//rust:toolchain",
 )
-
-tvix.toolchain(
-    name = "tvix",
-    nixpkgs = "//tvix:nixpkgs",
-)
-
-tvix.build(
-    name = "hello",
-    derivation = "(import <nixpkgs> { }).hello",
-)
-
-#tvix.add_package_set(name = "nixpkgs", path = "third_party//:nixpkgs")
-#tvix.add_package_set(name = "fenix", path = "third_party//:fenix")
-
-#tvix.call_package(name = "hello", src = "./package.nix", args = {})
-#tvix.expr(name = "hello_drv", expr = "{ nixpkgs, ... }: nixpkgs.hello", returnType = "derivation")
-#tvix.build(name = "hello", derivation = ":hello_drv")

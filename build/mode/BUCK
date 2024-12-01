@@ -1,13 +1,11 @@
-constraint_setting(
-    name = "mode",
-)
+MODES = ["debug", "release"]
 
-constraint_value(
-    name = "debug",
-    constraint_setting = ":mode",
-)
+constraint_setting(name = "mode")
 
-constraint_value(
-    name = "release",
-    constraint_setting = ":mode",
-)
+[
+    constraint_value(
+        name = mode,
+        constraint_setting = ":mode",
+    )
+    for mode in MODES
+]
