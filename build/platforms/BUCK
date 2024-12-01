@@ -3,7 +3,7 @@ platform(
     constraint_values = [
         "prelude//os/constraints:ios",
         "prelude//cpu/constraints:arm64",
-        "d71_config//constraints:physical",
+        "d71_config//device/constraints:physical",
     ],
 )
 
@@ -12,6 +12,6 @@ platform(
     constraint_values = [
         "prelude//os/constraints:ios",
         "prelude//cpu/constraints:arm64",
-        "d71_config//constraints:simulator",
+        "d71_config//device/constraints:simulator",
     ],
 )

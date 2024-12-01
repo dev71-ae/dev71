@@ -1,0 +1,3 @@
+load("//apple:toolchain.bzl", "xcode_apple_toolchain")
+
+xcode_apple_toolchain(name = "toolchain")
