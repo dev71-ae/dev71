@@ -27,9 +27,11 @@
             if pkgs.stdenv.isDarwin then
               llvm.stdenv.override {
                 cc = pkgs.wrapCCWith {
-                  cc = llvm.stdenv.cc;
+                  cc = llvm.stdenv.cc.cc;
                   extraBuildCommands = ''
                     echo "-L${pkgs.libiconv}/lib" >> $out/nix-support/cc-cflags
+                    echo "-L${llvm.libcxx}/lib" >> $out/nix-support/cc-cflags
+                    echo "-L${pkgs.apple-sdk_15}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/usr/lib/swift" >> $out/nix-support/cc-cflags
                   '';
                 };
               }

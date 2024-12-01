@@ -2,7 +2,7 @@ load("@toolchains//apple:apple_binary.bzl", "apple_binary")
 
 apple_binary(
     name = "dev71",
-    srcs = ["darwin/App.swift"],
+    srcs = ["darwin/main.swift"],
     target_sdk_version = "15.1",
     swift_package_name = "dev71",
     _dsymutil_extra_flags = [],

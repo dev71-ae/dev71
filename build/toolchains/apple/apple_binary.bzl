@@ -13,7 +13,6 @@ apple_binary = rule(
     impl = apple_binary_impl,
     attrs = (
         extra_attributes["apple_binary"] |
-        # @unsorted-dict-items
         cxx_common.srcs_arg() |
         cxx_common.platform_srcs_arg() |
         apple_common.headers_arg() |
@@ -43,17 +42,6 @@ apple_binary = rule(
         apple_common.uses_explicit_modules_arg() |
         apple_common.apple_sanitizer_compatibility_arg() |
         {
-            # -- Shouldn't need to add these
-            # "_apple_toolchain": attrs.toolchain_dep(default = "toolchains//:apple", providers = [AppleToolchainInfo]),
-            # "_apple_tools": attrs.exec_dep(default = "toolchains//:apple-tools", providers = [AppleToolsInfo]),
-            # "swift_package_name": attrs.option(attrs.string(), default = None),
-            # "_swift_enable_testing": attrs.bool(default = False),
-            # "enable_library_evolution": attrs.bool(default = True),
-            # "swift_compilation_mode": attrs.enum(SwiftCompilationMode.values(), default = "wmo"),
-            # "stripped": attrs.bool(default = False),
-            # "prefer_stripped_objects": attrs.bool(default = False),
-            # "binary_linker_flags": attrs.bool(default = False),
-            # # --
             "bridging_header": attrs.option(attrs.source(), default = None),
             "can_be_asset": attrs.option(attrs.bool(), default = None),
             "contacts": attrs.list(attrs.string(), default = []),
