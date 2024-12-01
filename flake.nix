@@ -19,12 +19,28 @@
         }:
         let
           fx = inputs'.fenix.packages;
+          llvm = pkgs.llvmPackages_19;
+
+          stdenv =
+            if pkgs.stdenv.isDarwin then
+              llvm.stdenv.override {
+                cc = pkgs.wrapCCWith {
+                  cc = llvm.stdenv.cc;
+                  extraBuildCommands = ''
+                    echo "-L${pkgs.libiconv}/lib" >> $out/nix-support/cc-cflags
+                  '';
+                };
+              }
+            else
+              pkgs.stdenvAdapters.useMoldLinker llvm.stdenv;
+
+          mkShell = pkgs.mkShell.override { inherit stdenv; };
         in
         {
 
-          devShells.rust = pkgs.mkShell {
+          devShells.rust = mkShell {
             packages = builtins.attrValues {
-              toolchain-dev = fx.combine [
+              rust-toolchain = fx.combine [
                 fx.rust-analyzer
                 fx.complete.rust-src
 
@@ -38,7 +54,7 @@
             };
           };
 
-          devShells.default = pkgs.mkShell {
+          devShells.default = mkShell {
             inputsFrom = [ config.devShells.rust ];
             packages = builtins.attrValues {
               buck2 = pkgs.callPackage ./dev/nix/pkgs/buck2 { inherit (fx) fromToolchainFile; };
