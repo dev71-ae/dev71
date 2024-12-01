@@ -1,0 +1,7 @@
+buildscript = []
+
+[[platform_fixup.'cfg(target_os = "windows")'.buildscript]]
+[platform_fixup.'cfg(target_os = "windows")'.buildscript.prebuilt_cxx_library]
+name = "extra_libraries"
+static_libs = ["lib/libwinapi_ole32.a", "lib/libwinapi_shell32.a"]
+

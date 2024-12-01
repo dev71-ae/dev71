@@ -70,8 +70,6 @@ rust_binary(
     env = {
         "CARGO_PKG_VERSION": COMMIT,
     },
-    # NOTE(@huwaireb): In most cases I'd prefer to separate our dependencies from third-party library dependencies
-    # but in this case it's okay.
     deps = [
         "//rust:clap",
         "//rust:indexmap",

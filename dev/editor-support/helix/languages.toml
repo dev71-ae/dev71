@@ -1,3 +1,34 @@
+[language-server.buck2-lsp]
+command = "buck2"
+args = ["lsp"]
+
+[language-server.rust-analyzer.config.check]
+overrideCommand = [
+  "buck2",
+  "run",
+  "-v=0",
+  "--console=none",
+  "third_party//tools/rust-project:bin",
+  "--",
+  "check",
+  "$saved_file",
+]
+
+[language-server.rust-analyzer.config.workspace.discoverConfig]
+command = [
+  "buck2",
+  "run",
+  "-v=0",
+  "--console=none",
+  "third_party//tools/rust-project:bin",
+  "--",
+  "develop-json",
+  "--sysroot-mode=rustc",
+  "{arg}",
+]
+progressLabel = "rust-analyzer[buck2]"
+filesToWatch = ["BUCK", "PACKAGE"]
+
 [[language]]
 name = "starlark"
 file-types = [
@@ -8,20 +39,9 @@ file-types = [
   { glob = "BUCK.*" },
   { glob = "PACKAGE" },
 ]
+formatter = { command = "buildifier" }
 language-servers = ["buck2-lsp"]
 
 [[language]]
 name = "ini"
 file-types = ["ini", { glob = ".buckconfig" }]
-
-[language-server.buck2-lsp]
-command = "buck2"
-args = ["lsp"]
-
-[language-server.rust-analyzer.config.check]
-overrideCommand = ["rust-project", "check", "$saved_file"]
-
-[language-server.rust-analyzer.config.workspace.discoverConfig]
-command = ["rust-project", "develop-json", "--sysroot-mode=rustc", "{arg}"]
-progressLabel = "rust-analyzer[buck2]"
-filesToWatch = ["BUCK", "PACKAGE"]

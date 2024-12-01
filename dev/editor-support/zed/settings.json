@@ -13,7 +13,12 @@
 				"workspace": {
 					"discoverConfig": {
 						"command": [
-							"rust-project",
+							"buck2",
+							"run",
+							"-v=0",
+							"--console=none",
+							"third_party//tools/rust-project:bin",
+							"--",
 							"develop-json",
 							"--sysroot-mode=rustc",
 							"{arg}"
@@ -23,7 +28,16 @@
 					}
 				},
 				"check": {
-					"overrideCommand": ["rust-project", "check", "$saved_file"]
+					"overrideCommand": [
+						"buck2",
+						"run",
+						"-v=0",
+						"--console=none",
+						"third_party//tools/rust-project:bin",
+						"--",
+						"check",
+						"$saved_file"
+					]
 				}
 			}
 		}

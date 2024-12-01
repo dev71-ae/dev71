@@ -1,0 +1,5 @@
+buildscript = []
+
+[[platform_fixup.'cfg(target_os = "windows")'.buildscript]]
+[platform_fixup.'cfg(target_os = "windows")'.buildscript.rustc_flags]
+

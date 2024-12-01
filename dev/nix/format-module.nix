@@ -14,8 +14,9 @@
       ".buckroot"
       ".buckconfig"
       "*/.buckconfig"
+      ".gitattributes"
       "build/mode/{debug,release}"
-      "build/tools/bin/*"
+      "dev/dotslash/*"
       "*.{md,envrc,swift}"
     ];
 

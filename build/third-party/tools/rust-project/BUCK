@@ -1,0 +1,47 @@
+TAG = "2024-11-15"
+SOURCES = map(lambda file: "integrations/rust-project/{}".format(file), [
+    "src/main.rs",
+    "src/buck.rs",
+    "src/cli/check.rs",
+    "src/cli/develop.rs",
+    "src/cli/new.rs",
+    "src/cli.rs",
+    "src/diagnostics.rs",
+    "src/json_project.rs",
+    "src/path.rs",
+    "src/progress.rs",
+    "src/scuba.rs",
+    "src/sysroot.rs",
+    "src/target.rs",
+    "templates/TARGETS_BIN",
+    "templates/TARGETS_LIB",
+])
+
+http_archive(
+    name = "archive",
+    urls = ["https://github.com/facebook/buck2/archive/refs/tags/{}.tar.gz".format(TAG)],
+    sha256 = "c2a301d00a3b91407dab3d881eabec440c3e4ac04da32ec8045da0babe6708c4",
+    type = "tar.gz",
+    strip_prefix = "buck2-{}".format(TAG),
+    sub_targets = SOURCES,
+    visibility = [":bin"],
+)
+
+rust_binary(
+    name = "bin",
+    srcs = map(lambda file: ":archive[{}]".format(file), SOURCES),
+    edition = "2021",
+    deps = [
+        "//rust:anyhow",
+        "//rust:clap",
+        "//rust:dunce",
+        "//rust:elf",
+        "//rust:rustc-hash",
+        "//rust:serde",
+        "//rust:serde_json",
+        "//rust:tracing",
+        "//rust:tracing-subscriber",
+        "//rust:whoami",
+    ],
+    visibility = ["PUBLIC"],
+)

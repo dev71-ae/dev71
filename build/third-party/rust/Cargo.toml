@@ -4,7 +4,7 @@ name = "top"
 path = "top.rs"
 
 [dependencies]
-clap = "4.5"
+clap = { version = "4.5", features = ["derive"] }
 indexmap = "2.6"
 log = "0.4"
 serde = { version = "1.0", default-features = false, features = ["derive"] }
@@ -14,6 +14,13 @@ toml = "0.8"
 proc-macro2 = "1.0"
 quote = "1"
 heck = "0.5"
+whoami = "1.5"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rustc-hash = "2.1"
+elf = "0.7"
+dunce = "1.0"
+anyhow = "1.0"
 
 [dependencies.syn]
 version = "2.0"
