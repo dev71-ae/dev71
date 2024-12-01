@@ -35,5 +35,28 @@ system_rust_toolchain(
     name = "toolchain",
     default_edition = "2021",
     rustc_target_triple = RUST_TARGET_TRIPLE,
+    rustc_flags = select({
+        "DEFAULT": [
+            "-Copt-level=0",
+            "-Cdebuginfo=2",
+            "-Cdebug-assertions=on",
+            "-Coverflow-checks=on",
+            "-Clto=off",
+            "-Cpanic=unwind",
+            "-Ccodegen-units=256",
+            "-Crpath",
+        ],
+        "mode//:release": [
+            "-Copt-level=3",
+            "-Csplit-debuginfo=off",
+            "-Cdebuginfo=0",
+            "-Cdebug-assertions=off",
+            "-Coverflow-checks=off",
+            "-Clto=thin",
+            "-Cpanic=abort",
+            "-Ccodegen-units=1",
+            "-Cstrip=symbols",
+        ],
+    }),
     visibility = ["PUBLIC"],
 )
