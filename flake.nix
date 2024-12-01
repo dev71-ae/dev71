@@ -1,17 +1,19 @@
 {
-  description = "dev71-ae/dev71: A developer flake for Dev71 clients.";
+  description = "A developer flake for core71 and Dev71 clients";
 
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
+        "x86_64-darwin"
+
         "aarch64-linux"
         "aarch64-darwin"
-        "x86_64-darwin"
       ];
       perSystem =
         {
+          lib,
           pkgs,
           config,
           inputs',
@@ -55,15 +57,17 @@
           };
 
           devShells.default = mkShell {
-            inputsFrom = [ config.devShells.rust ];
             packages = builtins.attrValues {
-              buck2 = pkgs.callPackage ./dev/nix/pkgs/buck2 { inherit (fx) fromToolchainFile; };
+              buck2 = pkgs.callPackage ./nix/pkgs/buck2 { inherit (fx) fromToolchainFile; };
               inherit (config.treefmt.build.programs) nixfmt buildifier;
             };
+
+            buildInputs = lib.optionals stdenv.isDarwin [ pkgs.apple-sdk_15 ];
+            inputsFrom = [ config.devShells.rust ];
           };
 
         };
-      imports = [ ./dev/nix/format-module.nix ];
+      imports = [ ./nix/format-module.nix ];
     };
 
   inputs = {
