@@ -1,6 +1,5 @@
 [toolchain]
-channel = "stable"
-profile = "minimal"
+channel = "1.83"
 components = ["rustc", "rust-std"]
 targets = [
   "aarch64-apple-ios",

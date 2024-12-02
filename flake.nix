@@ -50,7 +50,7 @@
 
                 (fx.fromToolchainFile {
                   file = ./rust-toolchain.toml;
-                  sha256 = "yMuSb5eQPO/bHv+Bcf/US8LVMbf/G/0MSfiPwBhiPpk=";
+                  sha256 = "s1RPtyvDGJaX/BisLT+ifVfuhDT1nZkZ1NcK8sbwELM=";
                 })
               ];
 
@@ -73,10 +73,13 @@
     };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    treefmt.url = "github:numtide/treefmt-nix";
+    treefmt = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     fenix = {
       url = "github:nix-community/fenix";

@@ -14,14 +14,14 @@
   installShellFiles,
 }:
 let
-  # Nov 26, 2024 
+  # Nov 26, 2024
   version = "2caeefc19c0bffd7814ea2a7836f4687df4552eb";
 
   src = fetchFromGitHub {
     owner = "facebook";
     repo = "buck2";
     rev = version;
-    sha256 = "tEwuqUXDTfqaEb9t6F64Kjp9htR+vdzWWeGJDFovMNQ=";
+    sha256 = "7QrXDq7H3VUSiThJlD13DSwe5QLGMbsSDtG6RNOa/Qc=";
   };
 
   rustPlatform =
