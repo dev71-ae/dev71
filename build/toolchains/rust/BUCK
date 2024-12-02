@@ -24,8 +24,8 @@ RUST_TARGET_TRIPLE = select({
     "config//os:ios": select({
         "config//cpu:arm64": select({
             "DEFAULT": "aarch64-apple-ios",
-            "d71_config//device:physical": "aarch64-apple-ios",
-            "d71_config//device:simulator": "aarch64-apple-ios-sim",
+            "config-71//device:physical": "aarch64-apple-ios",
+            "config-71//device:simulator": "aarch64-apple-ios-sim",
         }),
         "config//cpu:x86_64": "x86_64-apple-ios",
     }),

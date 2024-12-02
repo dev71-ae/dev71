@@ -1,16 +1,8 @@
-load("@toolchains//apple:apple_binary.bzl", "apple_binary")
+load("@prelude-71//apple:binary.bzl", "apple_binary")
 
 apple_binary(
     name = "dev71",
     srcs = ["darwin/main.swift"],
     target_sdk_version = "15.1",
     swift_package_name = "dev71",
-    _dsymutil_extra_flags = [],
-    _dsymutil_verify_dwarf = "",
-    _enable_library_evolution = True,
-    _apple_toolchain = "toolchains//:apple",
-    _apple_xctoolchain = "toolchains//:apple",
-    _apple_xctoolchain_bundle_id = "toolchains//:apple",
-    _apple_tools = "toolchains//:apple-tools",
-    dsym_uses_parallel_linker = True,
 )

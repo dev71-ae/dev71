@@ -11,7 +11,7 @@ rust_library(
 cbindgen(
     name = "core71.h",
     src = "src/lib.rs",
-    cbindgen_toml = "d71_config//core71:cbindgen.toml",
+    cbindgen_toml = "config-71//core71:cbindgen.toml",
     header_name = "core71",
     visibility = ["PUBLIC"],
 )

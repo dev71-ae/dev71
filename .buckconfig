@@ -1,7 +1,8 @@
 [cells]
   root = .
   prelude = prelude
-  d71_config = build/config
+  prelude-71 = build/prelude-71
+  config-71 = build/config
   mode = build/mode
   platforms = build/platforms
   toolchains = build/toolchains

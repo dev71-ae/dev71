@@ -9,10 +9,30 @@ load("@prelude//decls:cxx_common.bzl", "cxx_common")
 load("@prelude//decls:native_common.bzl", "native_common")
 load("@prelude//linking:types.bzl", "Linkage")
 
+VerifyDwarfKind = enum("none", "input", "output", "all", "auto")
+
+def _fix_apple_binary_extra_attrs(current_attrs: dict) -> dict:
+    new_attrs = {}
+    modified_attrs = {
+        "dsym_uses_parallel_linker": attrs.bool(default = True),
+        "_apple_toolchain": attrs.toolchain_dep(default = "toolchains//:apple", providers = [AppleToolchainInfo]),
+        "_apple_xctoolchain": attrs.toolchain_dep(default = "toolchains//:apple", providers = [AppleToolchainInfo]),
+        "_apple_xctoolchain_bundle_id": attrs.toolchain_dep(default = "toolchains//:apple", providers = [AppleToolchainInfo]),
+        "_apple_tools": attrs.exec_dep(default = "third_party//tools/apple:tools", providers = [AppleToolsInfo]),
+        "_enable_library_evolution": attrs.bool(default = False),
+        "_dsymutil_extra_flags": attrs.list(attrs.arg(), default = []),
+        "_dsymutil_verify_dwarf": attrs.enum(VerifyDwarfKind.values(), default = "auto"),
+    }
+
+    new_attrs.update(current_attrs)
+    new_attrs.update(modified_attrs)
+
+    return new_attrs
+
 apple_binary = rule(
     impl = apple_binary_impl,
     attrs = (
-        extra_attributes["apple_binary"] |
+        _fix_apple_binary_extra_attrs(extra_attributes["apple_binary"]) |
         cxx_common.srcs_arg() |
         cxx_common.platform_srcs_arg() |
         apple_common.headers_arg() |

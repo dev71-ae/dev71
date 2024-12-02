@@ -14,20 +14,3 @@ toolchain_alias(
     name = "apple",
     actual = "//apple:toolchain",
 )
-
-apple_tools(
-    name = "apple-tools",
-    adhoc_codesign_tool = "third_party//tools/cbindgen:bin",
-    assemble_bundle = "third_party//tools/cbindgen:bin",
-    dry_codesign_tool = "prelude//apple/tools:dry_codesign_tool",
-    framework_sanitizer = "prelude//apple/tools:framework_sanitizer",
-    info_plist_processor = "prelude//apple/tools/info_plist_processor:tool",
-    ipa_package_maker = "prelude//apple/tools:ipa_package_maker",
-    make_modulemap = "prelude//apple/tools:make_modulemap",
-    make_vfsoverlay = "prelude//apple/tools:make_vfsoverlay",
-    selective_debugging_scrubber = "prelude//apple/tools/selective_debugging:tool",
-    split_arch_combine_dsym_bundles_tool = "prelude//apple/tools:split_arch_combine_dsym_bundles_tool",
-    static_archive_linker = "prelude//apple/tools:static_archive_linker",
-    xcframework_maker = "prelude//apple/tools:xcframework_maker",
-    visibility = ["PUBLIC"],
-)
