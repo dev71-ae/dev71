@@ -1,5 +1,5 @@
 {
-  description = "A developer flake for core71 and Dev71 clients";
+  description = "A developer flake for Dev71's core(71) and clients";
 
   outputs =
     inputs@{ flake-parts, ... }:
