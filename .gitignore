@@ -12,3 +12,4 @@ buck-out
 # Editor support should be in `build/misc/editor-support`, not committed to the repo to avoid clutter
 /.helix
 /.zed
+/.nvim.lua
