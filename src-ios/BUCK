@@ -1,0 +1,8 @@
+load("@prelude-71//apple:binary.bzl", "apple_binary")
+
+apple_binary(
+    name = "dev71",
+    srcs = ["Main.swift", "ContentView.swift"],
+    target_sdk_version = "16",  # Minimum target SDK version
+    swift_package_name = "Dev71",
+)

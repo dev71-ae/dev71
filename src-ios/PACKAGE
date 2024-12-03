@@ -1,0 +1,6 @@
+load("@prelude//cfg/modifier:set_cfg_modifiers.bzl", "set_cfg_modifiers")
+load("@prelude//cfg/modifier:types.bzl", "ModifiersMatch")
+
+set_cfg_modifiers([
+    "prelude//os/constraints:a",
+])

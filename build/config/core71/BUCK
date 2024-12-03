@@ -1,5 +1,0 @@
-export_file(
-    name = "cbindgen.toml",
-    src = "cbindgen.toml",
-    visibility = ["PUBLIC"],
-)

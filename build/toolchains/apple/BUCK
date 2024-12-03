@@ -1,3 +1,11 @@
 load("//apple:toolchain.bzl", "xcode_apple_toolchain")
 
-xcode_apple_toolchain(name = "toolchain")
+xcode_platform_toolchain(
+    name = "ios-platform-toolchain",
+    sdk = "iphoneos",
+)
+
+xcode_apple_toolchain(
+    name = "ios-sim-platform-toolchain",
+    sdk = "iphonesimulator",
+)

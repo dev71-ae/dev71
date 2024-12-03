@@ -1,8 +1,0 @@
-load("@prelude-71//apple:binary.bzl", "apple_binary")
-
-apple_binary(
-    name = "dev71",
-    srcs = ["darwin/main.swift"],
-    target_sdk_version = "15.1",
-    swift_package_name = "dev71",
-)

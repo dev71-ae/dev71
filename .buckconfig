@@ -31,3 +31,4 @@
   restarter = true
   materializations = deferred
   hash_all_commands = true
+  file_watcher = watchmans
