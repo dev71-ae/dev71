@@ -1,0 +1,41 @@
+{
+  "pins": {
+    "atom": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "ekala-project",
+        "repo": "atom"
+      },
+      "branch": "master",
+      "revision": "6afc88c85f56eb23b579359c6d65328a3eae28da",
+      "url": "https://github.com/ekala-project/atom/archive/6afc88c85f56eb23b579359c6d65328a3eae28da.tar.gz",
+      "hash": "0fazypfiqlrrayycdrh9w2nv6k9630xw5mdqkj84dcacqi18v1ws"
+    },
+    "fenix": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "fenix"
+      },
+      "branch": "main",
+      "revision": "92e0d5d0d4569e0d4d4da4d83f7c413a735fd642",
+      "url": "https://github.com/nix-community/fenix/archive/92e0d5d0d4569e0d4d4da4d83f7c413a735fd642.tar.gz",
+      "hash": "1h3bc8390a9shdl50w9kvmfym8v2xd2zh3jp937gbld00qsc99ms"
+    },
+    "nixpkgs": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nixos",
+        "repo": "nixpkgs"
+      },
+      "branch": "nixos-unstable",
+      "revision": "d3c42f187194c26d9f0309a8ecc469d6c878ce33",
+      "url": "https://github.com/nixos/nixpkgs/archive/d3c42f187194c26d9f0309a8ecc469d6c878ce33.tar.gz",
+      "hash": "0bmnxsn9r4qfslg4mahsl9y9719ykifbazpxxn1fqf47zbbanxkh"
+    }
+  },
+  "version": 3
+}

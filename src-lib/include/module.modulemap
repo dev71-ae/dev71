@@ -1,0 +1,4 @@
+module Core71 {
+	umbrella header "ghostty.h"
+	export *
+}

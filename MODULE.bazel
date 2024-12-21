@@ -1,0 +1,40 @@
+module(
+    name = "dev71",
+    version = "0.1.0",
+    repo_name = "ae_dev71_dev71",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "platforms", version = "0.0.10")
+
+bazel_dep(name = "rules_rust", version = "0.56.0")
+
+bazel_dep(name = "rules_apple", version = "3.16.1")
+bazel_dep(name = "rules_swift", version = "2.3.1")
+bazel_dep(name = "rules_xcodeproj", version = "2.10.0")
+
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+
+rust.toolchain(
+    edition = "2024",
+    versions = ["nightly/2024-12-21"],
+    extra_target_triples = [
+        "aarch64-apple-ios",
+        "aarch64-apple-ios-sim",
+        "x86_64-apple-ios",
+        "aarch64-apple-darwin",
+    ],
+)
+
+use_repo(rust, "rust_toolchains")
+register_toolchains("@rust_toolchains//:all")
+
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+
+crate.spec(
+    package = "mls-rs",
+    version = "0.43.1",
+)
+
+crate.from_specs()
+use_repo(crate, "crates")
