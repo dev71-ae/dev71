@@ -1,14 +1,25 @@
-# Direnv
-.direnv/
+# IDE
+
+## bazel-bsp
+/.bazelbsp/
+
+## vscode
+/.vscode/
+
+## jetbrains
+/.idea/
 
 # Bazel
-bazel-*
+/bazel-*
+
+## user bazelrc
+user.bazelrc
 
 ## rules_xcodeproj
 Dev71.xcodeproj
 
-# Nix
-result
+## rust-analyzer support
+rust-project.json
 
 # C(++)
 

@@ -1,8 +1,0 @@
-[toolchain]
-channel = "nightly-2024-12-21" # Use 1.85 when available
-components = ["rustc", "rust-std", "rust-src"]
-targets = [
-  "aarch64-apple-ios",
-  "aarch64-apple-ios-sim",
-  "x86_64-apple-ios"
-]

@@ -10,6 +10,6 @@ xcodeproj(
     project_name = "Dev71",
     tags = ["manual"],
     top_level_targets = [
-        top_level_target("//src-ios:Dev71", target_environments = ["simulator"]),
+        top_level_target("//ios:Dev71", target_environments = ["simulator"]),
     ],
 )

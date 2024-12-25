@@ -4,7 +4,8 @@ load("@rules_swift//swift:swift.bzl", "swift_library")
 swift_library(
     name = "Sources",
     module_name = "Sources",
-    srcs = ["App.swift"],
+    srcs = glob(["Sources/**/*.swift"]),
+    deps = ["//core:c_lib"],
     tags = ["manual"],
 )
 
