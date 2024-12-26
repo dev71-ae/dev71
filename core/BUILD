@@ -1,10 +1,11 @@
-load("@rules_rust//rust:defs.bzl", "rust_static_library")
+load("@rules_rust//rust:defs.bzl", "rust_static_library", "rust_test", "rust_test_suite")
 load("@rules_swift//swift:swift_interop_hint.bzl", "swift_interop_hint")
 
 package(default_visibility = ["//visibility:public"])
 
 rust_static_library(
     name = "lib",
+    crate_name = "core71",
     srcs = glob(["src/**/*.rs"]),
     rustc_flags = select({
         "//:release": [
@@ -20,6 +21,11 @@ rust_static_library(
         ],
     }),
     deps = ["@crates//:mls-rs"],
+)
+
+rust_test(
+    name = "unit_tests",
+    crate = ":lib",
 )
 
 cc_import(
