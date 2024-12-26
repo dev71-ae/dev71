@@ -4,7 +4,6 @@ pub fn core71_init() -> i32 {
     1
 }
 
-
 #[cfg(test)]
 mod test {
     use crate::core71_init;

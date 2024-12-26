@@ -1,10 +1,11 @@
 RUST_RELEASE_FLAGS = [
-    "-Clto",
     "-Ccodegen-units=1",
     "-Cpanic=abort",
     "-Copt-level=z",
-    "-Clto=fat",
     "-Cstrip=symbols",
+    "-Cdebuginfo=0",
+    "-Cdebug-assertions=false",
+    "-Coverflow-checks=false",
 ]
 
 RUST_DEBUG_FLAGS = [
