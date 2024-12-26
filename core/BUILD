@@ -6,6 +6,20 @@ package(default_visibility = ["//visibility:public"])
 rust_static_library(
     name = "lib",
     srcs = glob(["src/**/*.rs"]),
+    rustc_flags = select({
+        "//:release": [
+            "-Clto",
+            "-Ccodegen-units=1",
+            "-Cpanic=abort",
+            "-Copt-level=z",
+            "-Clto=fat",
+            "-Cstrip=symbols",
+        ],
+        "//conditions:default": [
+            "-Copt-level=0",
+        ],
+    }),
+    deps = ["@crates//:mls-rs"],
 )
 
 cc_import(

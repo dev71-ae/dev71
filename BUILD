@@ -23,3 +23,10 @@ alias(
     name = "rust-project",
     actual = "@rules_rust//tools/rust_analyzer:gen_rust_project",
 )
+
+config_setting(
+    name = "release",
+    values = {
+        "compilation_mode": "opt",
+    },
+)
