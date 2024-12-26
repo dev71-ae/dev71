@@ -5,22 +5,13 @@ load(
     "xcodeproj",
 )
 
-xcodeproj(
-    name = "xcodeproj",
-    project_name = "Dev71",
-    tags = ["manual"],
-    top_level_targets = [
-        top_level_target("//ios:Dev71", target_environments = ["simulator"]),
-    ],
+alias(
+    name = "ios_dev71",
+    actual = "//src/ios.dev71:app",
 )
 
 alias(
-    name = "ios",
-    actual = "//ios:Dev71",
-)
-
-alias(
-    name = "rust-project",
+    name = "rust_project",
     actual = "@rules_rust//tools/rust_analyzer:gen_rust_project",
 )
 
@@ -29,4 +20,13 @@ config_setting(
     values = {
         "compilation_mode": "opt",
     },
+)
+
+xcodeproj(
+    name = "xcodeproj",
+    project_name = "Dev71",
+    tags = ["manual"],
+    top_level_targets = [
+        top_level_target(":ios_dev71", target_environments = ["simulator"]),
+    ],
 )

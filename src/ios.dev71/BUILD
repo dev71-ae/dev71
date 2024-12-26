@@ -2,19 +2,19 @@ load("@rules_apple//apple:ios.bzl", "ios_application")
 load("@rules_swift//swift:swift.bzl", "swift_library")
 
 swift_library(
-    name = "Sources",
+    name = "sources",
     module_name = "Sources",
     srcs = glob(["Sources/**/*.swift"]),
-    deps = ["//core:c_lib"],
+    deps = ["//src/lib.core71:clib"],
     tags = ["manual"],
 )
 
 ios_application(
-    name = "Dev71",
+    name = "app",
     bundle_id = "ae.dev71.Dev71",
     families = ["iphone"],
     infoplists = [":Info.plist"],
     minimum_os_version = "15.0",
-    deps = [":Sources"],
+    deps = [":sources"],
     visibility = ["//visibility:public"],
 )

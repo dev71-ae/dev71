@@ -1,5 +1,6 @@
 load("@rules_rust//rust:defs.bzl", "rust_static_library", "rust_test", "rust_test_suite")
 load("@rules_swift//swift:swift_interop_hint.bzl", "swift_interop_hint")
+load("//:defs.bzl", "RUST_DEBUG_FLAGS", "RUST_RELEASE_FLAGS")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -8,17 +9,8 @@ rust_static_library(
     crate_name = "core71",
     srcs = glob(["src/**/*.rs"]),
     rustc_flags = select({
-        "//:release": [
-            "-Clto",
-            "-Ccodegen-units=1",
-            "-Cpanic=abort",
-            "-Copt-level=z",
-            "-Clto=fat",
-            "-Cstrip=symbols",
-        ],
-        "//conditions:default": [
-            "-Copt-level=0",
-        ],
+        "//:release": RUST_RELEASE_FLAGS,
+        "//conditions:default": RUST_DEBUG_FLAGS,
     }),
     deps = ["@crates//:mls-rs"],
 )
@@ -29,7 +21,7 @@ rust_test(
 )
 
 cc_import(
-    name = "c_lib",
+    name = "clib",
     hdrs = ["include/core71.h"],
     static_library = ":lib",
     aspect_hints = [":swift_hint"],
