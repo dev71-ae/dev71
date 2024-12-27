@@ -7,6 +7,7 @@ swift_library(
     srcs = glob(["Sources/**/*.swift"]),
     deps = ["//src/lib.core71:clib"],
     tags = ["manual"],
+    target_compatible_with = ["@platforms//os:ios"],
 )
 
 ios_application(
