@@ -12,7 +12,7 @@ rust_static_library(
         "//:release": RUST_RELEASE_FLAGS,
         "//conditions:default": RUST_DEBUG_FLAGS,
     }),
-    deps = ["@crates//:mls-rs"],
+    deps = ["@crates//:mls-rs", "@crates//:libc"],
 )
 
 rust_test(
