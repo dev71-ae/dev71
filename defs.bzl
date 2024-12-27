@@ -7,7 +7,7 @@ RUST_RELEASE_FLAGS = [
     "-Cdebug-assertions=false",
     "-Coverflow-checks=false",
     "-Zlocation-detail=none",
-    "-Zfmt-debug=none",    
+    "-Zfmt-debug=none",
     "-Zstaticlib-allow-rdylib-deps",
     "-Zstaticlib-prefer-dynamic"
 ]
