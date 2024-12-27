@@ -1,7 +1,7 @@
 // SAFETY: There is no other global function of the same name
 #[unsafe(no_mangle)]
 pub fn core71_init() -> i32 {
-    1
+   core::time::Duration::from_secs(5).as_millis() as i32
 }
 
 #[cfg(test)]

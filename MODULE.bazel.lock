@@ -210,7 +210,7 @@
     "@@apple_support+//crosstool:setup.bzl%apple_cc_configure_extension": {
       "general": {
         "bzlTransitiveDigest": "Ync9nL0AbHC6ondeEY7fBjBjLxojTsiXcJh65ZDTRlA=",
-        "usagesDigest": "TtJLKDUXsm8NnPerfarK4JmakTToPXB+lpOOS6RjnCc=",
+        "usagesDigest": "5QGWkP/jV9/hWciNwhTP3D4ZODexYQJ2i1iD7fUKuFc=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},

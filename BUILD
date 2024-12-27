@@ -22,6 +22,23 @@ config_setting(
     },
 )
 
+platform(
+    name = "ios_arm64",
+    constraint_values = [
+        "@platforms//os:ios",
+        "@platforms//cpu:arm64",
+    ],
+)
+
+platform(
+    name = "ios_arm64_sim",
+    constraint_values = [
+        "@platforms//os:ios",
+        "@platforms//cpu:arm64",
+        "@build_bazel_apple_support//constraints:simulator",
+    ],
+)
+
 xcodeproj(
     name = "xcodeproj",
     project_name = "Dev71",
