@@ -1,3 +1,10 @@
+#![no_main]
+
+// use mls_rs_crypto_openssl::OpensslCryptoProvider;
+// use mls_rs_crypto_awslc::AwsLcCryptoProvider;
+
+// const CIPHERSUITE: CipherSuite = CipherSuite::CURVE25519_AES128;
+
 // SAFETY: There is no other global function of the same name
 #[unsafe(no_mangle)]
 pub extern "C" fn core71_init() -> i32 {
