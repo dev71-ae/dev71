@@ -9,8 +9,10 @@ bazel_dep(name = "platforms", version = "0.0.10")
 
 # Linux only for now: Awaiting https://github.com/uber/hermetic_cc_toolchain/pull/184
 bazel_dep(name = "hermetic_cc_toolchain", version = "3.1.1")
+bazel_dep(name = "rules_foreign_cc", version = "0.13.0")
 
 bazel_dep(name = "rules_rust", version = "0.56.0")
+bazel_dep(name = "rules_rust_bindgen", version = "0.56.0")
 
 bazel_dep(name = "rules_java", version = "8.6.3")
 bazel_dep(name = "rules_kotlin", version = "1.9.6")
@@ -62,6 +64,25 @@ crate.spec(
     package = "libc",
     version = "0.2.169",
     default_features = False,
+)
+
+crate.spec(
+    package = "bindgen",
+    version = "0.71.1",
+)
+
+crate.annotation(
+    crate = "aws-lc-sys",
+    gen_build_script = False,
+    crate_features = ["bindgen"],
+    build_script_deps = ["@crates//:bindgen"],
+    build_script_data = [Label("@rules_foreign_cc//toolchains:current_cmake_toolchain")],
+    build_script_toolchains = [
+        "@rules_foreign_cc//toolchains:current_cmake_toolchain",
+    ],
+    build_script_env = {
+        "CMAKE": "$${pwd}/$(CMAKE)",
+    },
 )
 
 crate.from_specs()
