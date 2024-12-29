@@ -13,7 +13,6 @@ RUST_RELEASE_FLAGS=(
 	"-Cpanic=abort"
 	"-Copt-level=s"
 	"-Clto=fat"
-	"-Clinker-plugin-lto"
 	"-Cstrip=symbols"
 	"-Cdebuginfo=0"
 	"-Cdebug-assertions=false"
