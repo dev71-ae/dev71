@@ -1,0 +1,20 @@
+[package]
+name = "dev71"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+mls-rs = { version = "0.43.2", default-features = false }
+libc = { version = "0.2.169", default-features = false }
+# mls-rs-crypto-awslc = { version = "0.13.0" }
+
+[lib]
+name = "dev71"
+crate-type = ["staticlib"]
+path = "src/lib.core71/src/lib.rs"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

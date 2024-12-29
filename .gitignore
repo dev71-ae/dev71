@@ -25,3 +25,8 @@ rust-project.json
 
 ## CCLS
 .ccls-cache/
+
+target/
+
+main.c
+main
