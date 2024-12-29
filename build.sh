@@ -13,6 +13,7 @@ RUST_RELEASE_FLAGS=(
 	"-Cpanic=abort"
 	"-Copt-level=s"
 	"-Clto=fat"
+	"-Clinker-plugin-lto"
 	"-Cstrip=symbols"
 	"-Cdebuginfo=0"
 	"-Cdebug-assertions=false"
@@ -26,7 +27,7 @@ RUST_RELEASE_FLAGS=(
 # Step 2: Build the Project Using rustc to Generate a Static Library (.a)
 build_project() {
 	echo "Building project with rustc to create a static library..."
-	cargo rustc --release -- "${RUST_RELEASE_FLAGS[@]}" --print native-static-libs
+	cargo -v rustc --release -- -v "${RUST_RELEASE_FLAGS[@]}" --print native-static-libs
 
 	# NOTE: Please set the following environment variables before running the build script
 	# SDKROOT environment variable - path to iPhoneOS.sdk or iPhoneSimulator.sdk
