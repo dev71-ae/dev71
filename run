@@ -1,0 +1,6 @@
+open -a "Simulator.app"
+
+./build
+
+xcrun simctl install booted out/Dev71.app
+xcrun simctl launch booted ae.dev71.Dev71

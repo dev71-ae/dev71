@@ -1,32 +1,12 @@
-# IDE
+/.direnv/
+out/
 
-## bazel-bsp
-/.bazelbsp/
+# Editor Support
 
-## vscode
-/.vscode/
-
-## jetbrains
-/.idea/
-
-# Bazel
-/bazel-*
-
-## user bazelrc
-user.bazelrc
-
-## rules_xcodeproj
-Dev71.xcodeproj
-
-## rust-analyzer support
-rust-project.json
+/.helix/
+/.nvim.lua/
 
 # C(++)
 
 ## CCLS
 .ccls-cache/
-
-target/
-
-main.c
-main
