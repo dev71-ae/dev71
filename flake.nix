@@ -62,6 +62,7 @@
                   p = config.packages;
                   toolchain = fx.combine [
                     fx.minimal.rustc
+                    fx.minimal.cargo # rust-analyzer only
                     fx.complete.rust-src
 
                     p.prelude-aarch64-apple-ios.rustlibs.core

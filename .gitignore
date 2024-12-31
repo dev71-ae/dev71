@@ -7,11 +7,19 @@ main
 ## Build
 result
 
-# Editor Support
+# Editor Configuration
 
 /.sourcekit-lsp
 /.helix/
 /.nvim.lua/
+/.vscode
+/.zed
+
+# Rust
+
+## Rust-analyzer
+/Cargo.lock
+/target
 
 # C(++)
 

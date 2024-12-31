@@ -1,0 +1,14 @@
+# NOTE: This file isn't used, it's just to fool rust-analyzer
+# until the rust-analyzer.toml support is complete. 
+# As in: 
+# - discoverConfig
+# - check.overrideCommand
+# work
+# The alternative is a bunch of editor-specific files
+
+[package]
+name = "prelude"
+edition = "2024"
+
+[lib]
+path = "src/prelude/prelude.rs"
