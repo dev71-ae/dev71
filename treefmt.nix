@@ -22,7 +22,7 @@
         };
 
         settings.global.excludes = [
-          "*.{md,swift,envrc,kt,plist}"
+          "*.{md,swift,envrc,kt,plist,modulemap}"
         ];
       };
     };
