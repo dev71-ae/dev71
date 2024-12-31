@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-int32_t core_init();
+int32_t prelude_init();
 
 #endif /* CORE71_H */

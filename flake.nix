@@ -40,12 +40,12 @@
               prelude-aarch64-apple-ios-sim = prelude "aarch64-apple-ios-sim";
 
               ios = ios {
-                target = "aarch64-apple-ios18.2";
+                swiftc-target = "aarch64-apple-ios15.0";
                 prelude = config.packages."prelude-aarch64-apple-ios";
               };
 
               ios-sim = ios {
-                target = "aarch64-apple-ios18.2-simulator";
+                swiftc-target = "aarch64-apple-ios15.0-simulator";
                 prelude = config.packages."prelude-aarch64-apple-ios-sim".override {
                   rustc-flags = [ "-Cpanic=abort" ];
                 };
@@ -55,10 +55,25 @@
           devShells = rec {
             prelude = config.mk-naked-shell.lib.mkNakedShell {
               name = "dev71";
-              packages = [
-                fx.rust-analyzer
-                config.treefmt.build.programs.rustfmt
-              ];
+              packages =
+                let
+                  p = config.packages;
+                  toolchain = fx.combine [
+                    fx.minimal.rustc
+                    fx.complete.rust-src
+
+                    p.prelude-aarch64-apple-ios.rustlibs.core
+                    p.prelude-aarch64-apple-ios.rustlibs.compiler-builtins
+
+                    p.prelude-aarch64-apple-ios-sim.rustlibs.core
+                    p.prelude-aarch64-apple-ios-sim.rustlibs.compiler-builtins
+                  ];
+                in
+                [
+                  toolchain
+                  fx.rust-analyzer
+                  config.treefmt.build.programs.rustfmt
+                ];
             };
 
             default = prelude;

@@ -1,8 +1,13 @@
+import Prelude
 import SwiftUI
 
 struct Dev71: App {
 	var body: some Scene {
-		WindowGroup { Text("Hello World") }
+		WindowGroup {
+			Button("Hello World") {
+				print(prelude_init())
+			}
+		}
 	}
 }
 

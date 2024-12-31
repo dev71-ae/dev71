@@ -102,4 +102,8 @@ stdenv.mkDerivation {
     cp prelude.h $out/include
     cp libprelude.a $out/lib
   '';
+
+  passthru.rustlibs = {
+    inherit core compiler-builtins;
+  };
 }

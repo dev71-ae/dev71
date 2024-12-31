@@ -15,9 +15,6 @@
         # .h
         programs.clang-format.enable = true;
 
-        # .sh
-        programs.shellcheck.enable = true;
-
         # .rs
         programs.rustfmt = {
           enable = true;

@@ -1,7 +1,7 @@
 {
   lib,
   stdenvNoCC,
-  target,
+  swiftc-target,
   prelude,
   xcode ? builtins.fetchClosure {
     fromStore = "https://cache.nixos.org";
@@ -14,7 +14,7 @@ let
   xctoolchain = "${xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain";
   platform = if isSimulator then "iPhoneSimulator" else "iPhoneOS";
 
-  isSimulator = lib.hasSuffix "simulator" target;
+  isSimulator = lib.hasSuffix "simulator" swiftc-target;
 in
 stdenvNoCC.mkDerivation {
   pname = "dev71-ios${if isSimulator then "-sim" else ""}";
@@ -35,7 +35,7 @@ stdenvNoCC.mkDerivation {
   '';
 
   buildPhase = ''
-    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${target} -sdk "$SDKROOT" -o Dev71
+    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${swiftc-target} -sdk "$SDKROOT" -o Dev71
   '';
 
   installPhase = ''
