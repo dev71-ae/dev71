@@ -11,11 +11,8 @@
     parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
-        "aarch64-linux"
         "aarch64-darwin"
-        "x86_64-darwin"
       ];
-
       perSystem =
         {
           pkgs,
@@ -24,37 +21,91 @@
           ...
         }:
         let
+          inherit (pkgs) lib;
+
           fx = inputs'.fenix.packages;
-          inherit (pkgs) stdenv;
+          fs = lib.fileset;
         in
         {
-          packages.prelude = pkgs.callPackage (
-            {
-              target ? "aarch64-apple-ios-sim",
-            }:
-            stdenv.mkDerivation {
-              pname = "dev71-prelude";
-              version = "0.1.0";
-
-              nativeBuildInputs =
+          packages =
+            let
+              ios-app =
+                {
+                  xcode ? builtins.fetchClosure {
+                    fromStore = "https://cache.nixos.org";
+                    fromPath = /nix/store/npfc6494dw4yz0iiqyi4sfnrwkyc9cyf-Xcode.app;
+                  },
+                  target,
+                }:
                 let
-                  rustc = fx.minimal.rustc-unwrapped;
-
-                  rustlibs = pkgs.callPackage ./rustlibs.nix {
-                    inherit rustc;
-                    inherit (fx.complete) rust-src;
-
-                    fenix = fx;
-                  } target;
-
-                  toolchain = fx.combine [
-                    rustc
-                    rustlibs
-                  ];
+                  xctoolchain = "${xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain";
+                  isSimulator = lib.hasSuffix "simulator" target;
                 in
-                [ toolchain ];
+                pkgs.stdenvNoCC.mkDerivation {
+                  pname = "dev71-ios";
+                  version = "0.1.0";
+
+                  preferLocalBuild = true;
+
+                  src = fs.toSource {
+                    root = ./.;
+                    fileset = fs.unions [
+                      ./data/Info.plist
+                      ./src/Main.swift
+                    ];
+                  };
+
+                  buildInputs =
+                    let
+                      prelude =
+                        config.packages."prelude-${if isSimulator then "aarch64-apple-ios-sim" else "aarch64-apple-ios"}";
+                    in
+                    [ prelude ];
+
+                  configurePhase =
+                    let
+                      platform = if isSimulator then "iPhoneSimulator" else "iPhoneOS";
+                    in
+                    ''
+                      export SDKROOT="${xcode}/Contents/Developer/Platforms/${platform}.platform/Developer/SDKs/${platform}.sdk"
+                    '';
+
+                  buildPhase = ''
+                    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift \
+                                          		    -target ${target} \
+                                          		    -sdk "$SDKROOT" \
+                                          		    -o Dev71
+                  '';
+
+                  installPhase = ''
+                    mkdir -p $out/Applications/Dev71.app
+
+                    cp ./data/Info.plist $out/Applications/Dev71.app 
+                    cp Dev71 $out/Applications/Dev71.app
+                  '';
+                };
+            in
+            {
+              ios-app = ios-app { target = "aarch64-apple-ios18.2"; };
+              ios-app-sim = ios-app { target = "aarch64-apple-ios18.2-simulator"; };
             }
-          ) { };
+            //
+              lib.foldl'
+                (
+                  acc: target:
+                  acc
+                  // {
+                    "prelude-${target}" = pkgs.callPackage ./prelude.pkg.nix {
+                      fenix = fx;
+                      rustc-target = target;
+                    };
+                  }
+                )
+                { }
+                [
+                  "aarch64-apple-ios"
+                  "aarch64-apple-ios-sim"
+                ];
 
           devShells.prelude = config.mk-naked-shell.lib.mkNakedShell {
             name = "dev71";
@@ -62,43 +113,33 @@
             packages = [
               fx.rust-analyzer
               config.treefmt.build.programs.rustfmt
-            ] ++ config.packages.prelude.nativeBuildInputs;
-          };
-
-          apps.simulator = { };
-
-          treefmt.config = {
-            projectRootFile = "flake.nix";
-
-            flakeCheck = true;
-            flakeFormatter = true;
-
-            # .nix
-            programs.nixfmt.enable = true;
-
-            # .h
-            programs.clang-format.enable = true;
-
-            # .sh
-            programs.shellcheck.enable = true;
-
-            # .rs
-            programs.rustfmt = {
-              enable = true;
-              package = fx.complete.rustfmt;
-            };
-
-            settings.global.excludes = [
-              "*.{md,swift,envrc,kt}"
             ];
           };
 
-          packages.default = config.packages.prelude;
+          apps.ios-sim = {
+            type = "app";
+            program = lib.getExe (
+              pkgs.writeShellApplication {
+                name = "ios-sim";
+
+                text = ''
+                  open -a "Simulator.app"
+
+                  xcrun simctl install booted ${config.packages.ios-app-sim}/Applications/Dev71.app
+                  xcrun simctl launch booted ae.dev71.Dev71
+                '';
+
+                meta.mainProgram = "ios-sim";
+                meta.platforms = lib.platforms.darwin;
+              }
+            );
+          };
+
           devShells.default = config.devShells.prelude;
         };
 
       imports = [
-        treefmt.flakeModule
+        ./treefmt.nix
         naked-shell.flakeModule
       ];
     };

@@ -1,15 +1,27 @@
 {
   stdenv,
-  rustc,
-  rust-src,
-  fenix,
   fetchFromGitHub,
-  ...
+  fenix,
+  rustc-target,
+  rustc-flags ? [
+    "-Ccodegen-units=1"
+    "-Cpanic=abort"
+    "-Copt-level=z"
+    "-Clto=fat"
+    "-Cstrip=symbols"
+    "-Cdebuginfo=0"
+    "-Cdebug-assertions=false"
+    "-Coverflow-checks=false"
+    "-Zlocation-detail=none"
+    "-Zfmt-debug=none"
+  ],
 }:
-target:
 let
+  rustc = fenix.minimal.rustc-unwrapped;
+  inherit (fenix.complete) rust-src;
+
   core = stdenv.mkDerivation {
-    pname = "rust-core";
+    pname = "core-${rustc-target}";
     version = rust-src.version;
 
     src = rust-src;
@@ -22,16 +34,17 @@ let
             -Cpanic=abort \
             -Copt-level=2 \
             -Zforce-unstable-if-unmarked \
-            --crate-name=core \
+            --allow dead_code \
             --crate-type=lib \
+            --crate-name=core \
+            --target=${rustc-target} \
             --edition=2021 \
-            --target=${target} \
             ./lib/rustlib/src/rust/library/core/src/lib.rs
     '';
 
     installPhase = ''
-      mkdir -p $out/lib/rustlib/${target}/lib
-      cp -r libcore.rlib $out/lib/rustlib/${target}/lib
+      mkdir -p $out/lib/rustlib/${rustc-target}/lib
+      cp -r libcore.rlib $out/lib/rustlib/${rustc-target}/lib
     '';
 
     dontStrip = true;
@@ -43,7 +56,7 @@ let
   ];
 
   compiler-builtins = stdenv.mkDerivation {
-    pname = "compiler_builtins";
+    pname = "compiler_builtins-${rustc-target}";
     version = "0.1.140";
 
     src = fetchFromGitHub {
@@ -65,23 +78,49 @@ let
             -Cpanic=abort \
             -Copt-level=2 \
             -Zforce-unstable-if-unmarked \
+            --allow unstable_name_collisions \
             --crate-type=lib \
             --crate-name=compiler_builtins \
-            --allow unstable_name_collisions \
+            --target=${rustc-target} \
             --edition=2021 \
-            --target=${target} \
             src/lib.rs
     '';
 
     installPhase = ''
-      mkdir -p $out/lib/rustlib/${target}/lib
-      cp -r libcompiler_builtins.rlib $out/lib/rustlib/${target}/lib
+      mkdir -p $out/lib/rustlib/${rustc-target}/lib
+      cp -r libcompiler_builtins.rlib $out/lib/rustlib/${rustc-target}/lib
     '';
 
     dontStrip = true;
   };
+
+  toolchain = fenix.combine [
+    rustc'
+    compiler-builtins
+  ];
 in
-fenix.combine [
-  core
-  compiler-builtins
-]
+stdenv.mkDerivation {
+  pname = "dev71-prelude-${rustc-target}";
+  version = "0.1.0";
+
+  src = ./src/prelude;
+
+  nativeBuildInputs = [ toolchain ];
+
+  buildPhase = ''
+    rustc ${toString rustc-flags} \
+          --crate-name=prelude \
+          --crate-type=staticlib \
+    			--target=${rustc-target} \
+          --edition=2024 \
+    			prelude.rs
+  '';
+
+  installPhase = ''
+    mkdir -p $out/{lib,include}
+    ls -la
+
+    cp prelude.h $out/include
+    cp libprelude.a $out/lib
+  '';
+}
