@@ -99,7 +99,7 @@ stdenv.mkDerivation {
     mkdir -p $out/{lib,include}
     ls -la
 
-    cp prelude.h $out/include
+    cp prelude.h module.modulemap $out/include
     cp libprelude.a $out/lib
   '';
 

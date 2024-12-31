@@ -3,6 +3,7 @@
   stdenvNoCC,
   swiftc-target,
   prelude,
+  # 16.2: nix store add --hash-algo sha256 /Applications/Xcode.app
   xcode ? builtins.fetchClosure {
     fromStore = "https://cache.nixos.org";
     fromPath = /nix/store/npfc6494dw4yz0iiqyi4sfnrwkyc9cyf-Xcode.app;
@@ -30,14 +31,8 @@ stdenvNoCC.mkDerivation {
     ];
   };
 
-  buildInputs = [ prelude ];
-
-  configurePhase = ''
-    export SDKROOT="${sdk}"
-  '';
-
   buildPhase = ''
-    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${swiftc-target} -sdk "$SDKROOT" -o Dev71
+    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${swiftc-target} -I${prelude}/include -L${prelude}/lib -lprelude -sdk ${sdk} -o Dev71
   '';
 
   installPhase = ''
