@@ -38,6 +38,7 @@
             {
               prelude-aarch64-apple-ios = prelude "aarch64-apple-ios";
               prelude-aarch64-apple-ios-sim = prelude "aarch64-apple-ios-sim";
+              prelude-aarch64-apple-darwin = prelude "aarch64-apple-darwin";
               prelude-x86_64-unknown-linux-gnu = prelude "x86_64-unknown-linux-gnu";
 
               ios = ios {
@@ -68,10 +69,6 @@
 
                     p.prelude-aarch64-apple-ios-sim.rustlibs.core
                     p.prelude-aarch64-apple-ios-sim.rustlibs.compiler-builtins
-
-                    p.prelude-x86_64-unknown-linux-gnu.rustlibs.core
-                    p.prelude-x86_64-unknown-linux-gnu.rustlibs.compiler-builtins
-
                   ];
                 in
                 [
@@ -84,28 +81,66 @@
             default = prelude;
           };
 
-          apps.run-ios-sim = {
-            type = "app";
-            program =
-              let
-                drv = pkgs.writeShellApplication {
-                  name = "run-ios-sim";
-                  text = ''
-                    if [ "''${1:-}" = "boot" ]; then
-                      DEVICE="''${2:-iPhone 16 Pro Max}"
-                      xcrun simctl boot "$DEVICE"
-                    fi
+          apps = {
+            # TODO: Implement BSP with nix as a backend for sourcekit-lsp
+            generate-sourcekit-config = {
+              type = "app";
+              program =
+                let
+                  inherit (config.packages) ios-sim;
+                  cfg.fallbackBuildSystem = {
+                    sdk = ios-sim.sdk;
+                    swiftCompilerFlags = [
+                      "-sdk"
+                      ios-sim.sdk
+                      "-target"
+                      ios-sim.target
+                      "-I"
+                      "${builtins.toString ./.}/src/prelude"
+                      "-L"
+                      ios-sim.prelude
+                      "-l"
+                      "prelude"
+                    ];
+                  };
 
-                    open -a "Simulator.app"
+                  drv = pkgs.writeShellApplication {
+                    name = "generate-sourcekit-config";
+                    text = ''
+                      mkdir -p .sourcekit-lsp
+                      echo '${builtins.toJSON cfg}' > .sourcekit-lsp/config.json
+                    '';
 
-                    xcrun simctl install booted ${config.packages.ios-sim}/Applications/Dev71.app
-                    xcrun simctl launch booted ae.dev71.Dev71
-                  '';
+                    meta.platforms = lib.platforms.darwin;
+                  };
+                in
+                "${drv}/bin/${drv.name}";
+            };
 
-                  meta.platforms = lib.platforms.darwin;
-                };
-              in
-              "${drv}/bin/${drv.name}";
+            run-ios-sim = {
+              type = "app";
+              program =
+                let
+                  drv = pkgs.writeShellApplication {
+                    name = "run-ios-sim";
+                    text = ''
+                      if [ "''${1:-}" = "boot" ]; then
+                        DEVICE="''${2:-iPhone 16 Pro Max}"
+                        xcrun simctl boot "$DEVICE"
+                      fi
+
+                      open -a "Simulator.app"
+
+                      xcrun simctl install booted ${config.packages.ios-sim}/Applications/Dev71.app
+                      xcrun simctl launch booted ae.dev71.Dev71
+                    '';
+
+                    meta.platforms = lib.platforms.darwin;
+                  };
+                in
+                "${drv}/bin/${drv.name}";
+            };
+
           };
         };
 

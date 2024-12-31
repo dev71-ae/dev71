@@ -1,8 +1,15 @@
+main.c
+main
+
+# Nix
 /.direnv/
-out/
+
+## Build
+result
 
 # Editor Support
 
+/.sourcekit-lsp
 /.helix/
 /.nvim.lua/
 
@@ -10,7 +17,3 @@ out/
 
 ## CCLS
 .ccls-cache/
-
-result
-main.c
-main

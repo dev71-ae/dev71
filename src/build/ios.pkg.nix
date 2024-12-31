@@ -15,6 +15,8 @@ let
   platform = if isSimulator then "iPhoneSimulator" else "iPhoneOS";
 
   isSimulator = lib.hasSuffix "simulator" swiftc-target;
+
+  sdk = "${xcode}/Contents/Developer/Platforms/${platform}.platform/Developer/SDKs/${platform}.sdk";
 in
 stdenvNoCC.mkDerivation {
   pname = "dev71-ios${if isSimulator then "-sim" else ""}";
@@ -31,7 +33,7 @@ stdenvNoCC.mkDerivation {
   buildInputs = [ prelude ];
 
   configurePhase = ''
-    export SDKROOT="${xcode}/Contents/Developer/Platforms/${platform}.platform/Developer/SDKs/${platform}.sdk"
+    export SDKROOT="${sdk}"
   '';
 
   buildPhase = ''
@@ -44,4 +46,9 @@ stdenvNoCC.mkDerivation {
     cp ./data/Info.plist $out/Applications/Dev71.app 
     cp Dev71 $out/Applications/Dev71.app
   '';
+
+  passthru = {
+    inherit sdk prelude;
+    target = swiftc-target;
+  };
 }
