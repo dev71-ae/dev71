@@ -20,37 +20,60 @@
           ...
         }:
         let
-          inherit (pkgs) lib;
           fx = inputs'.fenix.packages;
+          toolchains = pkgs.callPackage ./src/build/rust.toolchains.nix {
+            inherit (fx) combine;
+
+            inherit (fx.minimal) rustc-unwrapped;
+            inherit (fx.complete) rust-src;
+          };
+
+          # 16.2: nix store add --hash-algo sha256 /Applications/Xcode.app
+          xcode = builtins.fetchClosure {
+            fromStore = "https://cache.nixos.org";
+            fromPath = /nix/store/npfc6494dw4yz0iiqyi4sfnrwkyc9cyf-Xcode.app;
+          };
         in
         {
           packages =
             let
-              prelude =
-                target:
-                pkgs.callPackage ./src/build/prelude.pkg.nix {
-                  fenix = fx;
-                  rustc-target = target;
-                };
+              preludeFor = toolchain: pkgs.callPackage ./src/build/prelude.pkg.nix { inherit toolchain; };
 
-              ios = pkgs.callPackage ./src/build/ios.pkg.nix;
+              iosFor =
+                target: profile:
+                pkgs.callPackage ./src/build/ios.pkg.nix {
+                  inherit profile xcode;
+                  target =
+                    builtins.replaceStrings
+                      [
+                        "ios"
+                        "sim"
+                      ]
+                      [
+                        "ios15.0"
+                        "simulator"
+                      ]
+                      target;
+
+                  prelude =
+                    if profile == "debug" then
+                      config.packages."prelude-${target}".override { flags = [ "-Cpanic=abort" ]; }
+                    else
+                      config.packages."prelude-${target}";
+                };
             in
             {
-              prelude-aarch64-apple-ios = prelude "aarch64-apple-ios";
-              prelude-aarch64-apple-ios-sim = prelude "aarch64-apple-ios-sim";
-              prelude-aarch64-apple-darwin = prelude "aarch64-apple-darwin";
-              prelude-x86_64-unknown-linux-gnu = prelude "x86_64-unknown-linux-gnu";
+              prelude-aarch64-apple-ios = preludeFor toolchains.aarch64-apple-ios;
+              prelude-aarch64-apple-ios-sim = preludeFor toolchains.aarch64-apple-ios-sim;
 
-              ios = ios {
-                swiftc-target = "aarch64-apple-ios15.0";
-                prelude = config.packages."prelude-aarch64-apple-ios";
-              };
+              prelude-aarch64-apple-darwin = preludeFor toolchains.aarch64-apple-darwin;
+              prelude-x86_64-unknown-linux-gnu = preludeFor toolchains.x86_64-unknown-linux-gnu;
 
-              ios-sim = ios {
-                swiftc-target = "aarch64-apple-ios15.0-simulator";
-                prelude = config.packages."prelude-aarch64-apple-ios-sim".override {
-                  rustc-flags = [ "-Cpanic=abort" ];
-                };
+              ios = iosFor "aarch64-apple-ios" "release";
+              ios-sim = pkgs.callPackage ./src/build/ios.simulator.nix rec {
+                inherit xcode;
+                bundle = iosFor "aarch64-apple-ios-sim" "debug";
+                id = bundle.id;
               };
             };
 
@@ -59,89 +82,28 @@
               name = "dev71";
               packages =
                 let
-                  p = config.packages;
                   toolchain = fx.combine [
-                    fx.minimal.rustc
-                    fx.minimal.cargo # rust-analyzer only
+                    fx.minimal.rustc-unwrapped
                     fx.complete.rust-src
 
-                    p.prelude-aarch64-apple-ios.rustlibs.core
-                    p.prelude-aarch64-apple-ios.rustlibs.compiler-builtins
+                    toolchains.aarch64-apple-ios
+                    toolchains.aarch64-apple-ios-sim
 
-                    p.prelude-aarch64-apple-ios-sim.rustlibs.core
-                    p.prelude-aarch64-apple-ios-sim.rustlibs.compiler-builtins
+                    # Testing, constrained by systems attribute
+                    (
+                      if pkgs.stdenv.isLinux then toolchains.x86_64-unknown-linux-gnu else toolchains.aarch64-apple-darwin
+                    )
                   ];
                 in
                 [
                   toolchain
                   fx.rust-analyzer
+
                   config.treefmt.build.programs.rustfmt
                 ];
             };
 
             default = prelude;
-          };
-
-          apps = {
-            # TODO: Implement BSP with nix as a backend for sourcekit-lsp
-            generate-sourcekit-config = {
-              type = "app";
-              program =
-                let
-                  inherit (config.packages) ios-sim;
-                  cfg.fallbackBuildSystem = {
-                    sdk = ios-sim.sdk;
-                    swiftCompilerFlags = [
-                      "-sdk"
-                      ios-sim.sdk
-                      "-target"
-                      ios-sim.target
-                      "-I"
-                      "${builtins.toString ./.}/src/prelude"
-                      "-L"
-                      ios-sim.prelude
-                      "-l"
-                      "prelude"
-                    ];
-                  };
-
-                  drv = pkgs.writeShellApplication {
-                    name = "generate-sourcekit-config";
-                    text = ''
-                      mkdir -p .sourcekit-lsp
-                      echo '${builtins.toJSON cfg}' > .sourcekit-lsp/config.json
-                    '';
-
-                    meta.platforms = lib.platforms.darwin;
-                  };
-                in
-                "${drv}/bin/${drv.name}";
-            };
-
-            run-ios-sim = {
-              type = "app";
-              program =
-                let
-                  drv = pkgs.writeShellApplication {
-                    name = "run-ios-sim";
-                    text = ''
-                      if [ "''${1:-}" = "boot" ]; then
-                        DEVICE="''${2:-iPhone 16 Pro Max}"
-                        xcrun simctl boot "$DEVICE"
-                      fi
-
-                      open -a "Simulator.app"
-
-                      xcrun simctl install booted ${config.packages.ios-sim}/Applications/Dev71.app
-                      xcrun simctl launch booted ae.dev71.Dev71
-                    '';
-
-                    meta.platforms = lib.platforms.darwin;
-                  };
-                in
-                "${drv}/bin/${drv.name}";
-            };
-
           };
         };
 
@@ -168,8 +130,6 @@
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    # TODO: Integrate something like this into the repo.
     naked-shell.url = "github:yusdacra/mk-naked-shell";
   };
 }

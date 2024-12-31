@@ -15,12 +15,6 @@ result
 /.vscode
 /.zed
 
-# Rust
-
-## Rust-analyzer
-/Cargo.lock
-/target
-
 # C(++)
 
 ## CCLS
