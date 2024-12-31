@@ -61,7 +61,7 @@
                         if isSimulator then
                           config.packages."prelude-aarch64-apple-ios-sim".override { rustc-flags = [ "-Cpanic=abort" ]; }
                         else
-                          config.packages."preldue-aarch64-apple-ios";
+                          config.packages."prelude-aarch64-apple-ios";
                     in
                     [ prelude ];
 
@@ -74,10 +74,7 @@
                     '';
 
                   buildPhase = ''
-                    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift \
-                                          		    -target ${target} \
-                                          		    -sdk "$SDKROOT" \
-                                          		    -o Dev71
+                    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${target} -sdk "$SDKROOT" -o Dev71
                   '';
 
                   installPhase = ''
