@@ -58,7 +58,10 @@
                   buildInputs =
                     let
                       prelude =
-                        config.packages."prelude-${if isSimulator then "aarch64-apple-ios-sim" else "aarch64-apple-ios"}";
+                        if isSimulator then
+                          config.packages."prelude-aarch64-apple-ios-sim".override { rustc-flags = [ "-Cpanic=abort" ]; }
+                        else
+                          config.packages."preldue-aarch64-apple-ios";
                     in
                     [ prelude ];
 
@@ -123,6 +126,11 @@
                 name = "ios-sim";
 
                 text = ''
+                  if [ "''${1:-}" = "boot" ]; then
+                    DEVICE="''${2:-iPhone 16 Pro Max}"
+                    xcrun simctl boot "$DEVICE"
+                  fi
+
                   open -a "Simulator.app"
 
                   xcrun simctl install booted ${config.packages.ios-app-sim}/Applications/Dev71.app
