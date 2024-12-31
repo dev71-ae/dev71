@@ -2,7 +2,7 @@ main.c
 main
 
 # Nix
-/.direnv/
+.direnv/
 
 ## Build
 result
@@ -19,3 +19,8 @@ result
 
 ## CCLS
 .ccls-cache/
+
+# Rust
+
+## Cargo
+target/

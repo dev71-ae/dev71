@@ -23,15 +23,13 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ toolchain ];
 
   buildPhase = ''
-    rustc ${toString flags} --crate-name=prelude --crate-type=staticlib --target=${toolchain.target} \
-          --edition=2024 prelude.rs
+    rustc ${toString flags} --crate-name=prelude --crate-type=staticlib  \
+          --target=${toolchain.target} --edition=2024 prelude.rs
   '';
 
   installPhase = ''
-    mkdir -p $out/{lib,include}
-
-    cp prelude.h module.modulemap $out/include
-    cp libprelude.a $out/lib
+    install -Dm644 -t $out/lib libprelude.a
+    install -Dm644 -t $out/include prelude.h module.modulemap
   '';
 
   dontStrip = true;

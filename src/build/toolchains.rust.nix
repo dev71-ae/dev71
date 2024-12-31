@@ -1,4 +1,5 @@
 {
+  lib,
   stdenv,
   fetchFromGitHub,
   rustc-unwrapped,
@@ -9,62 +10,83 @@ let
   toolchain =
     target:
     let
-      core = stdenv.mkDerivation {
-        pname = "core-${target}";
-        version = rust-src.version;
+      flags = [
+        "-Cpanic=abort"
+        "-Copt-level=2"
+        "-Zforce-unstable-if-unmarked"
+      ];
 
-        src = rust-src;
+      featuresToCfg = lib.concatMapStringsSep " " (feature: "--cfg=feature='\"${feature}\"'");
 
-        nativeBuildInputs = [ rustc-unwrapped ];
+      core =
+        let
+          features = featuresToCfg [
+            "optimize_for_size"
+            "panic_immediate_abort"
+          ];
+        in
+        stdenv.mkDerivation {
+          pname = "core-${target}";
+          version = rust-src.version;
 
-        buildPhase = ''
-          rustc --cfg='feature="optimize_for_size"' --cfg='feature="panic_immediate_abort"' \
-                -Cpanic=abort -Copt-level=2 -Zforce-unstable-if-unmarked --allow dead_code \
-                --crate-type=lib --crate-name=core --target=${target} --edition=2021 \
-                ./lib/rustlib/src/rust/library/core/src/lib.rs
-        '';
+          src = rust-src;
 
-        installPhase = ''
-          mkdir -p $out/lib/rustlib/${target}/lib
-          cp -r libcore.rlib $out/lib/rustlib/${target}/lib
-        '';
+          nativeBuildInputs = [ rustc-unwrapped ];
 
-        dontStrip = true;
-      };
+          buildPhase = ''
+            rustc ${features} ${toString flags} --allow dead_code \
+                  --crate-type=lib --crate-name=core --target=${target} \
+                  --edition=2021 ./lib/rustlib/src/rust/library/core/src/lib.rs
+          '';
+
+          installPhase = ''
+            install -Dm644 -t $out/lib/rustlib/${target}/lib libcore.rlib 
+          '';
+
+          dontStrip = true;
+        };
 
       rustc' = combine [
         rustc-unwrapped
         core
       ];
 
-      compiler-builtins = stdenv.mkDerivation {
-        pname = "compiler_builtins-${target}";
-        version = "0.1.140";
+      compiler-builtins =
+        let
+          features = featuresToCfg [
+            "compiler-builtins"
+            "core"
+            "default"
+            "mem"
+            "rustc-dep-of-std"
+            "unstable"
+          ];
+        in
+        stdenv.mkDerivation {
+          pname = "compiler_builtins-${target}";
+          version = "0.1.140";
 
-        src = fetchFromGitHub {
-          owner = "rust-lang";
-          repo = "compiler-builtins";
-          tag = "compiler_builtins-v0.1.140";
-          sha256 = "b0EPGAXPEg2kWVCqf2Io8/mXKt9+h+hP/0Tz9HjWWUY=";
+          src = fetchFromGitHub {
+            owner = "rust-lang";
+            repo = "compiler-builtins";
+            tag = "compiler_builtins-v0.1.140";
+            sha256 = "b0EPGAXPEg2kWVCqf2Io8/mXKt9+h+hP/0Tz9HjWWUY=";
+          };
+
+          nativeBuildInputs = [ rustc' ];
+
+          buildPhase = ''
+            rustc ${features} ${toString flags} --allow unstable_name_collisions \
+                  --crate-type=lib --crate-name=compiler_builtins --target=${target} \
+                  --edition=2021 src/lib.rs
+          '';
+
+          installPhase = ''
+            install -Dm644 -t $out/lib/rustlib/${target}/lib  libcompiler_builtins.rlib
+          '';
+
+          dontStrip = true;
         };
-
-        nativeBuildInputs = [ rustc' ];
-
-        buildPhase = ''
-          rustc --cfg 'feature="compiler-builtins"' --cfg 'feature="core"' --cfg 'feature="default"' \
-                --cfg 'feature="mem"' --cfg 'feature="rustc-dep-of-std"' --cfg 'feature="unstable"' \
-                -Cpanic=abort -Copt-level=2 -Zforce-unstable-if-unmarked --allow unstable_name_collisions \
-                --crate-type=lib --crate-name=compiler_builtins --target=${target} --edition=2021 \
-                src/lib.rs
-        '';
-
-        installPhase = ''
-          mkdir -p $out/lib/rustlib/${target}/lib
-          cp -r libcompiler_builtins.rlib $out/lib/rustlib/${target}/lib
-        '';
-
-        dontStrip = true;
-      };
     in
     (combine [
       rustc'

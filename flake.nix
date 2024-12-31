@@ -118,6 +118,8 @@
 
         imports = [
           ./treefmt.nix
+          ./src/build/bso/flake-module.nix
+
           naked-shell.flakeModule
         ];
       }
