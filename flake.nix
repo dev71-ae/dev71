@@ -23,7 +23,7 @@
           }:
           let
             fx = inputs'.fenix.packages;
-            toolchains = pkgs.callPackage ./src/build/rust.toolchains.nix {
+            toolchains = pkgs.callPackage ./src/build/toolchains.rust.nix {
               inherit (fx) combine;
 
               inherit (fx.minimal) rustc-unwrapped;
@@ -33,7 +33,7 @@
           {
             packages =
               let
-                preludeFor = toolchain: pkgs.callPackage ./src/build/prelude.pkg.nix { inherit toolchain; };
+                preludeFor = toolchain: pkgs.callPackage ./src/build/pkg.prelude.nix { inherit toolchain; };
               in
               {
                 prelude-aarch64-apple-ios = preludeFor toolchains.aarch64-apple-ios;
@@ -84,7 +84,7 @@
 
             iosFor =
               target: profile:
-              pkgs.callPackage ./src/build/ios.pkg.nix {
+              pkgs.callPackage ./src/build/pkg.ios.nix {
                 inherit profile xcode;
                 target =
                   builtins.replaceStrings
@@ -107,9 +107,10 @@
           in
           {
             ios = iosFor "aarch64-apple-ios" "release";
-            ios-sim = pkgs.callPackage ./src/build/ios.simulator.nix rec {
+            ios-sim = pkgs.callPackage ./src/build/simulator.ios.nix rec {
               inherit xcode;
               bundle = iosFor "aarch64-apple-ios-sim" "debug";
+              name = bundle.bname;
               id = bundle.id;
             };
           }

@@ -2,9 +2,10 @@
   writeShellApplication,
   xcode,
   bundle,
+  name,
   id,
 }:
-writeShellApplication rec {
+writeShellApplication {
   name = "run-${bundle.pname}";
   text = ''
     # xcrun simctl list (default: iPhone 16 Pro Max 18.2)
@@ -20,11 +21,9 @@ writeShellApplication rec {
     fi
 
     # Install the app
-    xcrun simctl install "$DEVICE" ${bundle}/Applications/${bundle.bname}.app
+    xcrun simctl install "$DEVICE" ${bundle}/Applications/${name}.app
 
     # Launch the app in the simulator
     xcrun simctl launch "$DEVICE" "${id}"
   '';
-
-  meta.mainProgram = name;
 }
