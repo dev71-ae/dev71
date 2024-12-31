@@ -10,3 +10,7 @@ out/
 
 ## CCLS
 .ccls-cache/
+
+result
+main.c
+main

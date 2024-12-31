@@ -2,7 +2,7 @@
 
 // SAFETY: There is no other global function of the same name
 #[unsafe(no_mangle)]
-pub extern "C" fn core71_init() -> i32 {
+pub extern "C" fn prelude_init() -> i32 {
     71
 }
 

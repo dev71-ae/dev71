@@ -38,6 +38,7 @@
             {
               prelude-aarch64-apple-ios = prelude "aarch64-apple-ios";
               prelude-aarch64-apple-ios-sim = prelude "aarch64-apple-ios-sim";
+              prelude-x86_64-unknown-linux-gnu = prelude "x86_64-unknown-linux-gnu";
 
               ios = ios {
                 swiftc-target = "aarch64-apple-ios15.0";
@@ -67,6 +68,10 @@
 
                     p.prelude-aarch64-apple-ios-sim.rustlibs.core
                     p.prelude-aarch64-apple-ios-sim.rustlibs.compiler-builtins
+
+                    p.prelude-x86_64-unknown-linux-gnu.rustlibs.core
+                    p.prelude-x86_64-unknown-linux-gnu.rustlibs.compiler-builtins
+
                   ];
                 in
                 [

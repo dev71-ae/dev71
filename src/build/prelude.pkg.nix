@@ -106,4 +106,6 @@ stdenv.mkDerivation {
   passthru.rustlibs = {
     inherit core compiler-builtins;
   };
+
+  dontStrip = true;
 }
