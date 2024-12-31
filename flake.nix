@@ -110,8 +110,8 @@
             ios-sim = pkgs.callPackage ./src/build/simulator.ios.nix rec {
               inherit xcode;
               bundle = iosFor "aarch64-apple-ios-sim" "debug";
-              name = bundle.bname;
-              id = bundle.id;
+              name = bundle.data.EXECUTABLE_NAME;
+              id = bundle.data.PRODUCT_BUNDLE_IDENTIFIER;
             };
           }
         );
