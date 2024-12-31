@@ -86,7 +86,7 @@ stdenv.mkDerivation {
   pname = "dev71-prelude-${rustc-target}";
   version = "0.1.0";
 
-  src = ./src/prelude;
+  src = ../prelude;
 
   nativeBuildInputs = [ toolchain ];
 

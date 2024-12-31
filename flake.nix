@@ -4,7 +4,6 @@
   outputs =
     inputs@{
       parts,
-      treefmt,
       naked-shell,
       ...
     }:
@@ -22,125 +21,72 @@
         }:
         let
           inherit (pkgs) lib;
-
           fx = inputs'.fenix.packages;
-          fs = lib.fileset;
         in
         {
           packages =
             let
-              ios-app =
-                {
-                  xcode ? builtins.fetchClosure {
-                    fromStore = "https://cache.nixos.org";
-                    fromPath = /nix/store/npfc6494dw4yz0iiqyi4sfnrwkyc9cyf-Xcode.app;
-                  },
-                  target,
-                }:
-                let
-                  xctoolchain = "${xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain";
-                  isSimulator = lib.hasSuffix "simulator" target;
-                in
-                pkgs.stdenvNoCC.mkDerivation {
-                  pname = "dev71-ios";
-                  version = "0.1.0";
-
-                  preferLocalBuild = true;
-
-                  src = fs.toSource {
-                    root = ./.;
-                    fileset = fs.unions [
-                      ./data/Info.plist
-                      ./src/Main.swift
-                    ];
-                  };
-
-                  buildInputs =
-                    let
-                      prelude =
-                        if isSimulator then
-                          config.packages."prelude-aarch64-apple-ios-sim".override { rustc-flags = [ "-Cpanic=abort" ]; }
-                        else
-                          config.packages."prelude-aarch64-apple-ios";
-                    in
-                    [ prelude ];
-
-                  configurePhase =
-                    let
-                      platform = if isSimulator then "iPhoneSimulator" else "iPhoneOS";
-                    in
-                    ''
-                      export SDKROOT="${xcode}/Contents/Developer/Platforms/${platform}.platform/Developer/SDKs/${platform}.sdk"
-                    '';
-
-                  buildPhase = ''
-                    ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${target} -sdk "$SDKROOT" -o Dev71
-                  '';
-
-                  installPhase = ''
-                    mkdir -p $out/Applications/Dev71.app
-
-                    cp ./data/Info.plist $out/Applications/Dev71.app 
-                    cp Dev71 $out/Applications/Dev71.app
-                  '';
+              prelude =
+                target:
+                pkgs.callPackage ./src/build/prelude.pkg.nix {
+                  fenix = fx;
+                  rustc-target = target;
                 };
+
+              ios = pkgs.callPackage ./src/build/ios.pkg.nix;
             in
             {
-              ios-app = ios-app { target = "aarch64-apple-ios18.2"; };
-              ios-app-sim = ios-app { target = "aarch64-apple-ios18.2-simulator"; };
-            }
-            //
-              lib.foldl'
-                (
-                  acc: target:
-                  acc
-                  // {
-                    "prelude-${target}" = pkgs.callPackage ./prelude.pkg.nix {
-                      fenix = fx;
-                      rustc-target = target;
-                    };
-                  }
-                )
-                { }
-                [
-                  "aarch64-apple-ios"
-                  "aarch64-apple-ios-sim"
-                ];
+              prelude-aarch64-apple-ios = prelude "aarch64-apple-ios";
+              prelude-aarch64-apple-ios-sim = prelude "aarch64-apple-ios-sim";
 
-          devShells.prelude = config.mk-naked-shell.lib.mkNakedShell {
-            name = "dev71";
+              ios = ios {
+                target = "aarch64-apple-ios18.2";
+                prelude = config.packages."prelude-aarch64-apple-ios";
+              };
 
-            packages = [
-              fx.rust-analyzer
-              config.treefmt.build.programs.rustfmt
-            ];
+              ios-sim = ios {
+                target = "aarch64-apple-ios18.2-simulator";
+                prelude = config.packages."prelude-aarch64-apple-ios-sim".override {
+                  rustc-flags = [ "-Cpanic=abort" ];
+                };
+              };
+            };
+
+          devShells = rec {
+            prelude = config.mk-naked-shell.lib.mkNakedShell {
+              name = "dev71";
+              packages = [
+                fx.rust-analyzer
+                config.treefmt.build.programs.rustfmt
+              ];
+            };
+
+            default = prelude;
           };
 
-          apps.ios-sim = {
+          apps.run-ios-sim = {
             type = "app";
-            program = lib.getExe (
-              pkgs.writeShellApplication {
-                name = "ios-sim";
+            program =
+              let
+                drv = pkgs.writeShellApplication {
+                  name = "run-ios-sim";
+                  text = ''
+                    if [ "''${1:-}" = "boot" ]; then
+                      DEVICE="''${2:-iPhone 16 Pro Max}"
+                      xcrun simctl boot "$DEVICE"
+                    fi
 
-                text = ''
-                  if [ "''${1:-}" = "boot" ]; then
-                    DEVICE="''${2:-iPhone 16 Pro Max}"
-                    xcrun simctl boot "$DEVICE"
-                  fi
+                    open -a "Simulator.app"
 
-                  open -a "Simulator.app"
+                    xcrun simctl install booted ${config.packages.ios-sim}/Applications/Dev71.app
+                    xcrun simctl launch booted ae.dev71.Dev71
+                  '';
 
-                  xcrun simctl install booted ${config.packages.ios-app-sim}/Applications/Dev71.app
-                  xcrun simctl launch booted ae.dev71.Dev71
-                '';
-
-                meta.mainProgram = "ios-sim";
-                meta.platforms = lib.platforms.darwin;
-              }
-            );
+                  meta.platforms = lib.platforms.darwin;
+                };
+              in
+              "${drv}/bin/${drv.name}";
           };
-
-          devShells.default = config.devShells.prelude;
         };
 
       imports = [
