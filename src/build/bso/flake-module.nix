@@ -18,6 +18,7 @@
             combine [
               minimal.rustc
               minimal.cargo
+              complete.clippy
             ];
 
           rustPlatform = pkgs.makeRustPlatform {

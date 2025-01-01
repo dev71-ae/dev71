@@ -1,5 +1,5 @@
 {
-  description = "A flake for developing, building, and deploying Dev71";
+  description = "A flake for developing, building, and deploying Dev71 clients and services";
 
   outputs =
     inputs@{
@@ -36,6 +36,8 @@
                 preludeFor = toolchain: pkgs.callPackage ./src/build/pkg.prelude.nix { inherit toolchain; };
               in
               {
+                # Given we don't depend on the iPhone SDKs, this works!
+                # The point that we find the need to, we should constraint this to MacOS.
                 prelude-aarch64-apple-ios = preludeFor toolchains.aarch64-apple-ios;
                 prelude-aarch64-apple-ios-sim = preludeFor toolchains.aarch64-apple-ios-sim;
 
@@ -85,7 +87,7 @@
             iosFor =
               target: profile:
               pkgs.callPackage ./src/build/pkg.ios.nix {
-                inherit profile xcode;
+                inherit xcode;
                 target =
                   builtins.replaceStrings
                     [

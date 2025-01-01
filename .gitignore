@@ -1,6 +1,3 @@
-main.c
-main
-
 # Nix
 .direnv/
 
@@ -24,3 +21,11 @@ result
 
 ## Cargo
 target/
+
+# Swift
+
+## Sourcekit
+buildServer.json
+
+# Bso
+/.bsp

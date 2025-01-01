@@ -1,8 +1,8 @@
-#ifndef CORE_H
-#define CORE_H
+#ifndef PRELUDE_H
+#define PRELUDE_H
 
 #include <stdint.h>
 
 int32_t prelude_init();
 
-#endif /* CORE71_H */
+#endif /* PRELUDE_H */

@@ -5,14 +5,11 @@
   prelude,
   xcode,
   target,
-  profile, # TODO: Figure out how to emulate `swift build -c release`
+  isSimulator ? lib.hasSuffix "simulator" target,
 }:
 let
   fs = lib.fileset;
-
   xctoolchain = "${xcode}/Contents/Developer/Toolchains/XcodeDefault.xctoolchain";
-
-  isSimulator = lib.hasSuffix "simulator" target;
 
   platform = if isSimulator then "iPhoneSimulator" else "iPhoneOS";
   sdk = "${xcode}/Contents/Developer/Platforms/${platform}.platform/Developer/SDKs/${platform}.sdk";
@@ -41,8 +38,8 @@ let
   };
 in
 stdenvNoCC.mkDerivation {
-  pname = "dev71-ios-" + profile + (if isSimulator then "-sim" else "");
-  version = data.PRODUCT_VERSION;
+  pname = data.PRODUCT_NAME + ".app";
+  version = data.PRODUCT_VERSION + (if isSimulator then "-sim" else "");
 
   src = fs.toSource {
     root = ../..;
