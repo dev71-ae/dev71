@@ -69,11 +69,77 @@ pub struct ResponseError {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct Notification {
     pub method: String,
 
     #[serde(skip_serializing_if = "serde_json::Value::is_null")]
     pub params: json::Value,
+}
+
+fn invalid_data(reason: &str) -> io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, reason)
+}
+
+pub trait RequestType {
+    const METHOD: &str;
+    type Response;
+}
+
+impl ErrorCode {
+    const PARSE_ERROR: i32 = -32700;
+    const INVALID_REQUEST: i32 = -32600;
+    const METHOD_NOT_FOUND: i32 = -32601;
+    const INVALID_PARAMS: i32 = -32602;
+    const INTERNAL_ERROR: i32 = -32603;
+
+    pub const fn code(&self) -> i32 {
+        use ErrorCode::*;
+        match *self {
+            ParseError => Self::PARSE_ERROR,
+            MethodNotFound => Self::METHOD_NOT_FOUND,
+            InvalidRequest => Self::INVALID_REQUEST,
+            InvalidParams => Self::INVALID_PARAMS,
+            InternalError => Self::INTERNAL_ERROR,
+            ServerError(c) => c,
+        }
+    }
+}
+
+impl TryFrom<i32> for ErrorCode {
+    type Error = String;
+
+    fn try_from(code: i32) -> Result<Self, Self::Error> {
+        use ErrorCode::*;
+        match code {
+            Self::PARSE_ERROR => Ok(ParseError),
+            Self::METHOD_NOT_FOUND => Ok(MethodNotFound),
+            Self::INVALID_REQUEST => Ok(InvalidRequest),
+            Self::INVALID_PARAMS => Ok(InvalidParams),
+            Self::INTERNAL_ERROR => Ok(InternalError),
+            c if (-32099..=-32000).contains(&c) => Ok(ServerError(c)),
+            c => Err(format!("invalid error code: {c}")),
+        }
+    }
+}
+
+impl<'a> serde::Deserialize<'a> for ErrorCode {
+    fn deserialize<D>(deserializer: D) -> Result<ErrorCode, D::Error>
+    where
+        D: Deserializer<'a>,
+    {
+        let code: i32 = Deserialize::deserialize(deserializer)?;
+        ErrorCode::try_from(code).map_err(de::Error::custom)
+    }
+}
+
+impl serde::Serialize for ErrorCode {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_i32(self.code())
+    }
 }
 
 pub fn parse_message(reader: &mut impl BufRead) -> io::Result<Message> {
@@ -113,64 +179,4 @@ pub fn parse_message(reader: &mut impl BufRead) -> io::Result<Message> {
         .read_to_string(&mut buffer)?;
 
     json::from_str(&buffer).map_err(|e| invalid_data(&e.to_string()))
-}
-
-fn invalid_data(reason: &str) -> io::Error {
-    io::Error::new(io::ErrorKind::InvalidData, reason)
-}
-
-impl ErrorCode {
-    const PARSE_ERROR: i32 = -32700;
-    const INVALID_REQUEST: i32 = -32600;
-    const METHOD_NOT_FOUND: i32 = -32601;
-    const INVALID_PARAMS: i32 = -32602;
-    const INTERNAL_ERROR: i32 = -32603;
-
-    pub const fn code(&self) -> i32 {
-        use ErrorCode::*;
-        match *self {
-            ParseError => Self::PARSE_ERROR,
-            MethodNotFound => Self::METHOD_NOT_FOUND,
-            InvalidRequest => Self::INVALID_REQUEST,
-            InvalidParams => Self::INVALID_PARAMS,
-            InternalError => Self::INTERNAL_ERROR,
-            ServerError(c) => c,
-        }
-    }
-}
-
-impl TryFrom<i32> for ErrorCode {
-    type Error = String;
-
-    fn try_from(code: i32) -> Result<Self, Self::Error> {
-        use ErrorCode::*;
-        match code {
-            Self::PARSE_ERROR => Ok(ParseError),
-            Self::METHOD_NOT_FOUND => Ok(MethodNotFound),
-            Self::INVALID_REQUEST => Ok(InvalidRequest),
-            Self::INVALID_PARAMS => Ok(InvalidParams),
-            Self::INTERNAL_ERROR => Ok(InternalError),
-            c if (-32099..=-32000).contains(&c) => Ok(ServerError(c)),
-            c => Err(format!("unknown server error code: {c}")),
-        }
-    }
-}
-
-impl<'a> serde::Deserialize<'a> for ErrorCode {
-    fn deserialize<D>(deserializer: D) -> Result<ErrorCode, D::Error>
-    where
-        D: Deserializer<'a>,
-    {
-        let code: i32 = Deserialize::deserialize(deserializer)?;
-        ErrorCode::try_from(code).map_err(de::Error::custom)
-    }
-}
-
-impl serde::Serialize for ErrorCode {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        serializer.serialize_i32(self.code())
-    }
 }
