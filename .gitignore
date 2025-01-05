@@ -25,5 +25,7 @@ result
 
 # Swift
 
-## SwiftPM
-.build/
+## Tuist
+/Dev71.xcworkspace
+/Dev71.xcodeproj
+/Derived

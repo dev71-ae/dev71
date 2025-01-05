@@ -11,11 +11,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    prelude.installHeadersDirectory(
-        b.path("src/prelude/include"),
-        &.{},
-        .{ .include_extensions = &.{ ".h", ".modulemap" } },
-    );
+    prelude.installHeadersDirectory(b.path("src/prelude"), &.{}, .{});
 
     b.installArtifact(prelude);
 
