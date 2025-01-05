@@ -1,31 +1,24 @@
 { inputs, ... }:
 {
-  perSystem =
-    { inputs', ... }:
-    {
-      treefmt.config = {
-        projectRootFile = "flake.nix";
+  perSystem.treefmt.config = {
+    projectRootFile = "flake.nix";
 
-        flakeCheck = true;
-        flakeFormatter = true;
+    flakeCheck = true;
+    flakeFormatter = true;
 
-        # .nix
-        programs.nixfmt.enable = true;
+    # .nix
+    programs.nixfmt.enable = true;
 
-        # .h
-        programs.clang-format.enable = true;
+    # .c, .h
+    programs.clang-format.enable = true;
 
-        # .rs
-        programs.rustfmt = {
-          enable = true;
-          package = inputs'.fenix.packages.complete.rustfmt;
-        };
+    # .zig
+    programs.zig.enable = true;
 
-        settings.global.excludes = [
-          "*.{md,swift,envrc,kt,plist,modulemap}"
-        ];
-      };
-    };
+    settings.global.excludes = [
+      "*.{md,swift,envrc,kt,plist,modulemap}"
+    ];
+  };
 
   imports = [ inputs.treefmt.flakeModule ];
 }

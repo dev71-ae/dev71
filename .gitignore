@@ -1,31 +1,27 @@
 # Nix
-.direnv/
+/.direnv/
 
 ## Build
 result
 
 # Editor Configuration
 
-/.sourcekit-lsp
+/.sourcekit-lsp/
 /.helix/
 /.nvim.lua/
-/.vscode
-/.zed
+/.vscode/
+/.zed/
 
 # C(++)
 
 ## CCLS
-.ccls-cache/
+/.ccls-cache/
 
-# Rust
+# Zig 
 
-## Cargo
-target/
+## Build
+/.zig-cache/
+/zig-out/
 
 # Swift
 
-## Sourcekit
-buildServer.json
-
-# Bso
-/.bsp

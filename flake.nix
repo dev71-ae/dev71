@@ -18,57 +18,19 @@
           {
             pkgs,
             config,
-            inputs',
             ...
           }:
-          let
-            fx = inputs'.fenix.packages;
-            toolchains = pkgs.callPackage ./src/build/toolchains.rust.nix {
-              inherit (fx) combine;
-
-              inherit (fx.minimal) rustc-unwrapped;
-              inherit (fx.complete) rust-src;
-            };
-          in
           {
-            packages =
-              let
-                preludeFor = toolchain: pkgs.callPackage ./src/build/pkg.prelude.nix { inherit toolchain; };
-              in
-              {
-                # Given we don't depend on the iPhone SDKs, this works!
-                # The point that we find the need to, we should constraint this to MacOS.
-                prelude-aarch64-apple-ios = preludeFor toolchains.aarch64-apple-ios;
-                prelude-aarch64-apple-ios-sim = preludeFor toolchains.aarch64-apple-ios-sim;
-
-                prelude-aarch64-apple-darwin = preludeFor toolchains.aarch64-apple-darwin;
-                prelude-x86_64-unknown-linux-gnu = preludeFor toolchains.x86_64-unknown-linux-gnu;
-              };
+            packages = {
+              prelude = pkgs.callPackage ./src/drv/prelude.nix { };
+            };
 
             devShells = rec {
               prelude = config.mk-naked-shell.lib.mkNakedShell {
                 name = "dev71";
-                packages =
-                  let
-                    toolchain = fx.combine [
-                      fx.minimal.rustc-unwrapped
-                      fx.complete.rust-src
-
-                      toolchains.aarch64-apple-ios
-                      toolchains.aarch64-apple-ios-sim
-
-                      # Testing, constrained by systems attribute
-                      (
-                        if pkgs.stdenv.isLinux then toolchains.x86_64-unknown-linux-gnu else toolchains.aarch64-apple-darwin
-                      )
-                    ];
-                  in
-                  [
-                    toolchain
-                    fx.rust-analyzer
-
-                    config.treefmt.build.programs.rustfmt
-                  ];
+                packages = builtins.attrValues {
+                  inherit (pkgs) zig zls;
+                };
               };
 
               default = prelude;
@@ -76,7 +38,7 @@
           };
 
         flake.packages.aarch64-darwin = withSystem "aarch64-darwin" (
-          { config, pkgs, ... }:
+          { pkgs, ... }:
           let
             # 16.2: nix store add --hash-algo sha256 /Applications/Xcode.app
             xcode = builtins.fetchClosure {
@@ -86,7 +48,7 @@
 
             iosFor =
               target: profile:
-              pkgs.callPackage ./src/build/pkg.ios.nix {
+              pkgs.callPackage ./src/drv/dev71.nix {
                 inherit xcode;
                 target =
                   builtins.replaceStrings
@@ -99,17 +61,11 @@
                       "simulator"
                     ]
                     target;
-
-                prelude =
-                  if profile == "debug" then
-                    config.packages."prelude-${target}".override { flags = [ "-Cpanic=abort" ]; }
-                  else
-                    config.packages."prelude-${target}";
               };
           in
           {
             ios = iosFor "aarch64-apple-ios" "release";
-            ios-sim = pkgs.callPackage ./src/build/simulator.ios.nix rec {
+            ios-sim = pkgs.callPackage ./src/drv/simulator.nix rec {
               inherit xcode;
               bundle = iosFor "aarch64-apple-ios-sim" "debug";
               name = bundle.data.EXECUTABLE_NAME;
@@ -120,8 +76,6 @@
 
         imports = [
           ./treefmt.nix
-          ./src/build/bso/flake-module.nix
-
           naked-shell.flakeModule
         ];
       }
@@ -131,11 +85,6 @@
     parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     treefmt = {

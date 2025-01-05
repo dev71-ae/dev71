@@ -2,7 +2,6 @@
   lib,
   substitute,
   stdenvNoCC,
-  prelude,
   xcode,
   target,
   isSimulator ? lib.hasSuffix "simulator" target,
@@ -50,7 +49,7 @@ stdenvNoCC.mkDerivation {
 
   buildPhase = ''
     ${xctoolchain}/usr/bin/swiftc ./src/Main.swift -target ${target} -sdk ${sdk} \
-    -I${prelude}/include -L${prelude}/lib -lprelude -o ${data.EXECUTABLE_NAME}
+    -o ${data.EXECUTABLE_NAME}
   '';
 
   installPhase = ''
