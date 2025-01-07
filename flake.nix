@@ -15,7 +15,7 @@
           ...
         }:
         let
-          packages = import ../package.nix;
+          packages = import ./package.nix;
 
           inherit (pkgs) lib stdenv callPackage;
           mkNakedShell = callPackage inputs.naked-shell { };
