@@ -5,7 +5,6 @@ const std = @import("std");
 
 const Step = std.Build.Step;
 const RunStep = std.Build.Step.Run;
-const LazyPath = std.Build.LazyPath;
 
 const XcFrameworkStep = @This();
 

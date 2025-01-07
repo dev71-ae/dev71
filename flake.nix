@@ -15,45 +15,20 @@
           ...
         }:
         let
-          packages = import ./package.nix;
-
-          inherit (pkgs) lib stdenv callPackage;
-          mkNakedShell = callPackage inputs.naked-shell { };
+          inherit (pkgs) callPackage;
         in
         {
-          packages = {
-            prelude = callPackage packages.prelude { };
-            ios = callPackage packages.ios { xcode = 0; };
+          devShells.default = callPackage ./nix/shell.nix {
+            mkNakedShell = callPackage inputs.naked-shell { };
           };
 
-          apps.xcgen = {
-            type = "app";
-            program = lib.getExe (
-              pkgs.writeShellApplication {
-                name = "xcgen";
-                runtimeInputs = [
-                  pkgs.zig
-                  pkgs.zls
-                  pkgs.tuist
-                ];
-                text = ''
-                  zig build ios
-                  TUIST_ZIG=${lib.getExe pkgs.zig} tuist generate
-                '';
-              }
-            );
-          };
-
-          devShells.default = mkNakedShell {
-            name = "dev71-shell";
-            packages = [
-              pkgs.zig
-              pkgs.zls
-            ] ++ lib.optionals stdenv.isDarwin [ pkgs.tuist ];
-          };
+          packages.prelude = callPackage ./nix/packages/prelude.nix { };
         };
 
-      imports = [ ./treefmt.nix ];
+      imports = [
+        ./nix/darwin-module.nix
+        ./nix/format-module.nix
+      ];
     };
 
   inputs = {
