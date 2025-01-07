@@ -52,7 +52,9 @@ fn createIOSLib(
     lib.bundle_compiler_rt = true;
     lib.linkLibC();
 
-    lib.installHeadersDirectory(b.path("src/prelude"), &.{}, .{});
+    lib.installHeadersDirectory(b.path("src/prelude/include"), &.{}, .{
+        .include_extensions = &.{ ".h", ".modulemap" },
+    });
 
     return lib;
 }
