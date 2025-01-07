@@ -30,11 +30,13 @@
       ];
     };
 
+  # TODO:
   ios =
     {
       lib,
       stdenvNoCC,
       xcode,
+      tuist,
       simulator ? false,
       sdk ? if simulator then xcode.sdk.iphonesimulator else xcode.sdk.iphoneos,
     }:
@@ -49,13 +51,19 @@
         ];
       };
 
-      nativeBuildInputs = [ xcode ];
+      nativeBuildInputs = [
+        #xcode
+        tuist
+      ];
+
+      #SDKROOT = sdk;
 
       buildPhase = ''
-        swift build --sdk ${sdk} --target Dev71 --triple arm64-apple-ios${lib.optionalString simulator "-simulator"} -c release
+        tuist build # pain
       '';
 
       installPhase = ''
+        exit 0
         mkdir -p $out/Dev71
       '';
 

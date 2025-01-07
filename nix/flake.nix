@@ -26,6 +26,24 @@
             ios = callPackage packages.ios { xcode = 0; };
           };
 
+          apps.xcgen = {
+            type = "app";
+            program = lib.getExe (
+              pkgs.writeShellApplication {
+                name = "xcgen";
+                runtimeInputs = [
+                  pkgs.zig
+                  pkgs.zls
+                  pkgs.tuist
+                ];
+                text = ''
+                  zig build ios
+                  TUIST_ZIG=${lib.getExe pkgs.zig} tuist generate
+                '';
+              }
+            );
+          };
+
           devShells.default = mkNakedShell {
             name = "dev71-shell";
             packages = [
