@@ -1,7 +1,6 @@
 import SwiftUI
 import Prelude
 
-@main
 struct Dev71: App {
 	var body: some Scene {
 		WindowGroup {
@@ -11,3 +10,5 @@ struct Dev71: App {
 		}
 	}
 }
+
+Dev71.main()

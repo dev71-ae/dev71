@@ -31,7 +31,7 @@
             packages = [
               pkgs.zig
               pkgs.zls
-            ];
+            ] ++ lib.optionals stdenv.isDarwin [ pkgs.tuist ];
           };
         };
 
@@ -54,6 +54,6 @@
       flake = false;
     };
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 }
