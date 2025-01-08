@@ -8,6 +8,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "ae.dev71.Dev71",
+            deploymentTargets: .iOS("15.0"),
             infoPlist: .extendingDefault(
                 with: [
                     "UILaunchScreen": [
@@ -17,23 +18,35 @@ let project = Project(
                 ]
             ),
             sources: ["src/main.swift"],
-            dependencies: [.xcframework(path: "zig-out/Prelude.xcframework")],
+            dependencies: [.target(name: "Prelude")],
             mergedBinaryType: .automatic
-        )
-    ],
-    schemes: [
-        .scheme(
-            name: "Dev71",
-            buildAction: .buildAction(
-                targets: [.target("Dev71")],
-                preActions: {
-                    guard case let .string(zig) = Environment.zig else { return [] }
-                    return [
-                        .executionAction(
-                            scriptText: "(cd $SRCROOT; \(zig) build ios)", target: "Dev71")
-                    ]
-                }()
-            )
-        )
+        ),
+        .target(
+            name: "Prelude",
+            destinations: .iOS,
+            product: .staticFramework,
+            bundleId: "ae.dev71.Libs.Prelude",
+            deploymentTargets: .iOS("12.0"),
+            headers: .headers(public: ["src/prelude/include/**/*.h"]),
+            scripts: [
+                .pre(
+                    tool: "zig",
+                    arguments: [
+                        "build",
+                        "-Dtarget=aarch64-ios$LLVM_TARGET_TRIPLE_SUFFIX",
+                    ],
+                    name: "Run zig build",
+                    inputPaths: ["src/prelude/**/*.zig"],
+                    outputPaths: ["zig-out/lib/libprelude.a"],
+                    basedOnDependencyAnalysis: true
+                )
+            ],
+            dependencies: [
+                .library(
+                    path: "zig-out/lib/libprelude.a",
+                    publicHeaders: "src/prelude/include", swiftModuleMap: .none,
+                    condition: .none)
+            ]
+        ),
     ]
 )
