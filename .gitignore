@@ -12,10 +12,10 @@ result
 /.vscode/
 /.zed/
 
-# C(++)
+# C
 
-## CCLS
-/.ccls-cache/
+## Clangd
+/.cache/
 
 # Zig 
 

@@ -10,9 +10,10 @@ stdenv.mkDerivation {
   version = "0.1.0-${target}";
 
   src = lib.fileset.toSource {
-    root = ../..;
+    root = ../../.;
     fileset = lib.fileset.unions [
       ../../build.zig
+      ../../src/build
       ../../src/prelude
     ];
   };

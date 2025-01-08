@@ -19,6 +19,7 @@
         in
         {
           devShells.default = callPackage ./nix/shell.nix {
+            llvmPackages = pkgs.llvmPackages_19;
             mkNakedShell = callPackage inputs.naked-shell { };
           };
 

@@ -4,6 +4,7 @@
   mkNakedShell,
   zig,
   zls,
+  llvmPackages,
   tuist,
 }:
 mkNakedShell {
@@ -11,5 +12,7 @@ mkNakedShell {
   packages = [
     zig
     zls
+    llvmPackages.clang
+    llvmPackages.clang-tools
   ] ++ lib.optionals stdenv.isDarwin [ tuist ];
 }
