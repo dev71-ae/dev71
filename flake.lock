@@ -1,18 +1,22 @@
 {
   "nodes": {
-    "naked-shell": {
-      "flake": false,
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1681286841,
-        "narHash": "sha256-3XlJrwlR0nBiREnuogoa5i1b4+w/XPe0z8bbrJASw0g=",
-        "owner": "yusdacra",
-        "repo": "mk-naked-shell",
-        "rev": "7612f828dd6f22b7fb332cc69440e839d7ffe6bd",
+        "lastModified": 1735644329,
+        "narHash": "sha256-tO3HrHriyLvipc4xr+Ewtdlo7wM1OjXNjlWRgmM7peY=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "f7795ede5b02664b57035b3b757876703e2c3eac",
         "type": "github"
       },
       "original": {
-        "owner": "yusdacra",
-        "repo": "mk-naked-shell",
+        "owner": "numtide",
+        "repo": "devshell",
         "type": "github"
       }
     },
@@ -54,7 +58,7 @@
     },
     "root": {
       "inputs": {
-        "naked-shell": "naked-shell",
+        "devshell": "devshell",
         "nixpkgs": "nixpkgs",
         "parts": "parts",
         "treefmt": "treefmt"

@@ -2,7 +2,7 @@
   description = "A flake for developing, building, and deploying Dev71";
 
   outputs =
-    inputs@{ parts, ... }:
+    inputs@{ parts, devshell, ... }:
     parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
@@ -18,15 +18,13 @@
           inherit (pkgs) callPackage;
         in
         {
-          devShells.default = callPackage ./nix/shell.nix {
-            llvmPackages = pkgs.llvmPackages_19;
-            mkNakedShell = callPackage inputs.naked-shell { };
-          };
-
           packages.prelude = callPackage ./nix/packages/prelude.nix { };
+          devshells.default = import ./nix/shell.nix { inherit pkgs; };
         };
 
       imports = [
+        devshell.flakeModule
+
         ./nix/darwin-module.nix
         ./nix/format-module.nix
       ];
@@ -43,9 +41,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    naked-shell = {
-      url = "github:yusdacra/mk-naked-shell";
-      flake = false;
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

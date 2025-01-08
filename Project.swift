@@ -27,7 +27,7 @@ let project = Project(
             product: .staticFramework,
             bundleId: "ae.dev71.Libs.Prelude",
             deploymentTargets: .iOS("12.0"),
-            headers: .headers(public: ["src/prelude/include/**/*.h"]),
+            headers: .headers(public: ["src/prelude/*.h"]),
             scripts: [
                 .pre(
                     tool: "zig",
@@ -44,7 +44,7 @@ let project = Project(
             dependencies: [
                 .library(
                     path: "zig-out/lib/libprelude.a",
-                    publicHeaders: "src/prelude/include", swiftModuleMap: .none,
+                    publicHeaders: "", swiftModuleMap: .none,
                     condition: .none)
             ]
         ),

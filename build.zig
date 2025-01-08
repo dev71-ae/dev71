@@ -1,8 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
-const XcFrameworkStep = @import("src/build/XcFrameworkStep.zig");
-
 comptime {
     const current = builtin.zig_version;
     const required: std.SemanticVersion = .{ .major = 0, .minor = 13, .patch = 0 };
@@ -22,9 +20,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
 
-    prelude.installHeadersDirectory(b.path("src/prelude/include"), &.{}, .{
-        .include_extensions = &.{ ".h", ".modulemap" },
-    });
+    prelude.installHeadersDirectory(b.path("src/prelude"), &.{}, .{});
 
     b.installArtifact(prelude);
 }
