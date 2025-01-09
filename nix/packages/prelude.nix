@@ -13,7 +13,6 @@ stdenv.mkDerivation {
     root = ../../.;
     fileset = lib.fileset.unions [
       ../../build.zig
-      ../../src/build
       ../../src/prelude
     ];
   };

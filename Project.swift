@@ -33,20 +33,20 @@ let project = Project(
                     tool: "zig",
                     arguments: [
                         "build",
+                        "prelude",
                         "-Dtarget=aarch64-ios$LLVM_TARGET_TRIPLE_SUFFIX",
+                        #"-Doptimize=$([ "$CONFIGURATION" == "Release" ] && echo "ReleaseSafe" || echo "Debug")"#,
+                        "--prefix-lib-dir",
+                        #""$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH""#,
                     ],
                     name: "Run zig build",
                     inputPaths: ["src/prelude/**/*.zig"],
-                    outputPaths: ["zig-out/lib/libprelude.a"],
+                    outputPaths: ["$(BUILT_PRODUCTS_DIR)/$(EXECUTABLE_PATH)"],
                     basedOnDependencyAnalysis: true
                 )
             ],
-            dependencies: [
-                .library(
-                    path: "zig-out/lib/libprelude.a",
-                    publicHeaders: "", swiftModuleMap: .none,
-                    condition: .none)
-            ]
+            // For good measure, preventing the generation of any executable.
+            settings: .settings(base: ["VERSIONING_SYSTEM": "None"])
         ),
     ]
 )

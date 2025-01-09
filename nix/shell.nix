@@ -24,16 +24,9 @@
     ]
     ++ lib.optionals stdenv.isDarwin [
       {
-        name = "ios";
-        category = "[darwin development]";
-        help = "Calls `tuist generate` to get you into Xcode with the project setup. NOTE: Xcode will automagically run `zig build` when the zig files change.";
-        # Zig build is just for good measure
-        command = "zig build -Dtarget=aarch64-ios-simulator && tuist generate";
-      }
-      {
         package = tuist;
         category = "[darwin development]";
-        help = "Tuist is the tool we use to generate the Xcode project files. TIP: Run `tuist edit` to modify the Project.swift manifest.";
+        help = "Tuist is the tool we use to generate the Xcode project files. TIP: Pass `generate` to get into xcode. Note that Xcode automagically will build the zig files on change.";
       }
     ];
 }
