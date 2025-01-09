@@ -16,7 +16,7 @@
     programs.zig.enable = true;
 
     settings.global.excludes = [
-      "*.{md,swift,envrc,kt,plist,modulemap}"
+      "*.{md,swift,envrc}"
     ];
   };
 

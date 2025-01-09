@@ -33,7 +33,7 @@ let project = Project(
                     tool: "zig",
                     arguments: [
                         "build",
-                        "prelude",
+                        "lib:prelude",
                         "-Dtarget=aarch64-ios$LLVM_TARGET_TRIPLE_SUFFIX",
                         #"-Doptimize=$([ "$CONFIGURATION" == "Release" ] && echo "ReleaseSafe" || echo "Debug")"#,
                         "--prefix-lib-dir",

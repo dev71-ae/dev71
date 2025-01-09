@@ -10,22 +10,13 @@
       ];
 
       perSystem =
+        { pkgs, ... }:
         {
-          pkgs,
-          ...
-        }:
-        let
-          inherit (pkgs) callPackage;
-        in
-        {
-          packages.prelude = callPackage ./nix/packages/prelude.nix { };
           devshells.default = import ./nix/shell.nix { inherit pkgs; };
         };
 
       imports = [
         devshell.flakeModule
-
-        ./nix/darwin-module.nix
         ./nix/format-module.nix
       ];
     };

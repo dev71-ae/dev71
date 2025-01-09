@@ -17,11 +17,15 @@ result
 ## Clangd
 /.cache/
 
-# Zig 
+# Zig
 
 ## Build
 /.zig-cache/
 /zig-out/
+
+## -Demit-compdb
+/compile_commands.json
+
 
 # Swift
 
